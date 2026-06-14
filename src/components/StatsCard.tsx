@@ -1,8 +1,10 @@
+import type { ReactNode } from "react";
+
 export interface StatsCardProps {
   title: string;
   value: string | number;
   delta?: string;
-  subtitle?: string;
+  subtitle?: ReactNode;
 }
 
 export default function StatsCard({
@@ -18,11 +20,10 @@ export default function StatsCard({
         <p className="font-sans text-3xl font-semibold text-black">{value}</p>
         {(delta || subtitle) && (
           <p className="font-sans text-xs font-medium">
-            {delta && (
-              <span className="text-primary-500">{delta}</span>
-            )}
+            {delta && <span className="text-primary-500">{delta}</span>}
             {delta && subtitle && " "}
-            {subtitle && (
+            {subtitle && !delta && subtitle}
+            {subtitle && delta && (
               <span className="text-neutral-600">{subtitle}</span>
             )}
           </p>
