@@ -2,7 +2,7 @@ import StatsCard from "@/components/StatsCard";
 
 export default function DashboardPage() {
   return (
-    <div className="grid grid-cols-4 gap-3">
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
       <StatsCard
         title="Orders today"
         value={12}

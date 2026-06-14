@@ -1,14 +1,5 @@
-import Sidebar from '@/components/Sidebar'
-import Navigation from '@/components/Navigation'
+import DashboardShell from '@/components/DashboardShell'
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="bg-body-color flex h-screen">
-      <Sidebar />
-      <div className="flex flex-1 flex-col overflow-hidden">
-        <Navigation />
-        <main className="flex-1 overflow-y-auto p-3">{children}</main>
-      </div>
-    </div>
-  )
+  return <DashboardShell>{children}</DashboardShell>
 }
