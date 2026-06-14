@@ -1,4 +1,5 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
+import type { LucideIcon } from "lucide-react";
 
 const VARIANT_CONFIG = {
   secondary: {
@@ -27,13 +28,13 @@ export type ButtonVariant = keyof typeof VARIANT_CONFIG;
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
-  icon?: ReactNode;
+  icon?: LucideIcon;
   children: ReactNode;
 }
 
 export default function Button({
   variant = "secondary",
-  icon,
+  icon: Icon,
   children,
   className,
   ...props
@@ -44,48 +45,10 @@ export default function Button({
       className={`inline-flex items-center gap-2 rounded-lg px-5 py-3 ${container} ${text} ${className ?? ""}`}
       {...props}
     >
-      {icon && <span className="shrink-0 size-3.5">{icon}</span>}
+      {Icon && <Icon size={14} className="shrink-0" />}
       <span className="whitespace-nowrap font-sans text-sm font-normal">
         {children}
       </span>
     </button>
-  );
-}
-
-export function ExportIcon() {
-  return (
-    <svg width="100%" height="100%" viewBox="0 0 11 12" fill="none">
-      <path
-        d="M5.17 0.5V8.08M8.08 5.17L5.17 8.08L2.25 5.17M0.5 11H9.83"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-export function TrashIcon() {
-  return (
-    <svg width="100%" height="100%" viewBox="0 0 11 12" fill="none">
-      <path
-        d="M4.58 1.67V0.5H5.75V1.67M0.5 2.25H9.83M1.67 2.83V11H8.67V2.83"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-export function PlusIcon() {
-  return (
-    <svg width="100%" height="100%" viewBox="0 0 14 14" fill="none">
-      <path
-        d="M7 2.33V11.67M2.33 7H11.67"
-        stroke="currentColor"
-        strokeLinecap="round"
-      />
-    </svg>
   );
 }
