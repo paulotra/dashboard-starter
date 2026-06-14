@@ -101,6 +101,7 @@
 
   /* Typography */
   --font-sans: var(--font-inter);
+  --text-2xs: 0.625rem; /* 10px */
   --font-mono: var(--font-geist-mono);
 
   /* Semantic aliases */
