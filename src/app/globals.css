@@ -105,16 +105,16 @@
   --font-mono: var(--font-geist-mono);
 
   /* Semantic aliases */
-  --color-white: var(--color-neutral-100);
+  --color-white: #ffffff;
   --color-white-60: #ffffff99;
   --color-white-20: #ffffff33;
-  --color-black: var(--color-neutral-1000);
-  --color-shadow: var(--color-neutral-300);
-  --color-bg-body: var(--color-primary-100);
-  --color-border-color: var(--color-primary-200);
-  --color-btn-primary-bg: var(--color-primary-200);
-  --color-btn-primary-bg-filled: var(--color-primary-500);
-  --color-btn-secondary-bg: var(--color-white);
+  --color-black: #000000;
+  --color-shadow: #e6e6e6;
+  --color-body-color: #f4f8fb;
+  --color-border-color: #dae9f4;
+  --color-btn-primary-bg: #dae9f4;
+  --color-btn-primary-bg-filled: #3564fc;
+  --color-btn-secondary-bg: #ffffff;
 }
 
 /* ─── Base ───────────────────────────────────────────────────── */
@@ -122,10 +122,4 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-inter), Arial, Helvetica, sans-serif;
-}
-
-*,
-*::before,
-*::after {
-  border-color: var(--border);
 }

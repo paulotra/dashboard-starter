@@ -18,6 +18,7 @@ const preview: Preview = {
     },
 
     nextjs: {
+      appDirectory: true,
       navigation: {
         pathname: '/dashboard',
       },
