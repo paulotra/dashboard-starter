@@ -12,6 +12,7 @@
   --primary: #0f172a;
   --primary-foreground: #ffffff;
   --ring: #0f172a;
+  --brand-blue: #3564fc;
 }
 
 /* ─── Dark mode ──────────────────────────────────────────────── */
@@ -42,6 +43,7 @@
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-ring: var(--ring);
+  --color-brand-blue: var(--brand-blue);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
