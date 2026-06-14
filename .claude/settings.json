@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "mcp__claude_ai_Figma__get_design_context",
-      "Bash(pnpm add *)"
+      "Bash(pnpm add *)",
+      "Bash(curl -s \"https://www.figma.com/api/mcp/asset/7f19be35-dc3f-4788-b3e0-2b2fafb94b99\")",
+      "Bash(curl -s \"https://www.figma.com/api/mcp/asset/b673fe12-fea1-4598-a0eb-a9dd3be2f0f4\")",
+      "Bash(curl -s \"https://www.figma.com/api/mcp/asset/8ae3b026-e810-4aeb-82cf-598040e7c7f8\")"
     ]
   }
 }
