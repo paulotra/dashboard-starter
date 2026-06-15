@@ -84,6 +84,10 @@ form/ primitives:
 - `form/Select.tsx` — native `<select>` styled; `options?: {label,value}[]`, `placeholder?`, ChevronDown icon.
 - `form/ImageDropzone.tsx` — `<label>` wrapping sr-only file input; `onFileSelect?`, `label?`, `hint?`.
 
+ESLint rule notes (next/core-web-vitals config is strict):
+- `react-hooks/set-state-in-effect`: blocks any `setState` call inside `useEffect` body — use guarded render-phase setState (store prev identity in state, compare during render) instead.
+- `react-hooks/refs`: blocks reading OR writing `ref.current` during render — refs are only for event handlers/effects. DOM refs (e.g. `fileInputRef`) are fine as long as `.current` is only touched in handlers.
+
 Icon pattern: use lucide-react directly (NOT a custom Icon abstraction). `src/components/icons/` directory was deleted — all icons now come from lucide-react. Icons used in RecentOrdersTable: `EllipsisVertical` (action menu), `ChevronsUpDown` (unsorted), `ChevronUp` (asc), `ChevronDown` (desc). Size via `size={14}` prop + `aria-hidden="true"`.
 
 Static asset pattern: SVGs in `public/` are referenced as string paths `/filename.svg` in `next/image`. No module import for public-dir assets. The `next/image` component is used with `width`/`height` props for static SVGs from `public/`.

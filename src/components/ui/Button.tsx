@@ -1,5 +1,6 @@
 import type { ButtonHTMLAttributes, ReactNode } from 'react'
 import type { LucideIcon } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 const VARIANT_CONFIG = {
   secondary: {
@@ -29,12 +30,15 @@ export type ButtonVariant = keyof typeof VARIANT_CONFIG
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant
   icon?: LucideIcon
+  /** Extra classes for the leading icon (e.g. to color it independently of the label). */
+  iconClassName?: string
   children: ReactNode
 }
 
 export default function Button({
   variant = 'secondary',
   icon: Icon,
+  iconClassName,
   children,
   className,
   ...props
@@ -42,10 +46,15 @@ export default function Button({
   const { container, text } = VARIANT_CONFIG[variant]
   return (
     <button
-      className={`inline-flex cursor-pointer items-center gap-2 rounded-lg px-5 py-3 ${container} ${text} ${className ?? ''}`}
+      className={cn(
+        'inline-flex cursor-pointer items-center gap-2 rounded-lg px-5 py-3',
+        container,
+        text,
+        className
+      )}
       {...props}
     >
-      {Icon && <Icon size={14} className="shrink-0" />}
+      {Icon && <Icon size={14} className={cn('shrink-0', iconClassName)} />}
       <span className="font-sans text-sm font-normal whitespace-nowrap">{children}</span>
     </button>
   )

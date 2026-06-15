@@ -37,13 +37,29 @@ Icons use lucide-react directly (not a custom Icon abstraction).
 
 Page-level composition, no story. `open`, `onClose`, `onSubmit?(data: AddProductFormData)?`. Wraps Body+Footer in `<form onSubmit>` so Enter submits. Categories derived from `SAMPLE_PRODUCTS` (Coffee, Soup, Tea). Uses Switch (controlled, `checked` + `onChange`), Button `variant="primary-filled"` for Create Product.
 
+## DrawerHeader (`src/components/ui/drawer/DrawerHeader.tsx`)
+
+Added optional `onBack?: () => void` prop (2026-06-15). When provided, renders a `size-9 bg-neutral-200 rounded-lg` button with `ChevronLeft` (size 18) before the title. Title and close button wrapped in `justify-between` flex row; title wrapped in `min-w-0 items-center gap-2` flex div. Fully backward-compatible — omitting `onBack` renders exactly as before.
+
 ## ProductPreviewDrawer (`src/app/(dashboard)/products/_components/ProductPreviewDrawer.tsx`)
 
-Read-only product detail drawer. Props: `product: Product | null`, `open`, `onClose`, `onEdit?`, `onDelete?`. No footer. Composed from DrawerWrapper + DrawerHeader + DrawerBody only.
+Now has `mode: 'view' | 'edit'` state (default `'view'`). Props: `product`, `open`, `onClose`, `onEdit?`, `onDelete?`, `onSave?(data: ProductFieldValues)`.
+
+**Reset pattern:** Uses guarded render-phase `setState` (React's documented "adjust state when prop changes" approach) — stores `prevProductId` and `prevOpen` in state (not refs), compares during render, and calls `setMode/setLocalImage/setEditValues` synchronously when identity changes. This avoids both `setState`-in-effect (blocked by linter) and ref reads during render (also blocked by linter).
+
+**View mode:** Unchanged preview content. "Edit product" button now calls `onEdit?.()` then `setMode('edit')`.
+
+**Edit mode:**
+- Header: `<DrawerHeader onBack={() => setMode('view')}>` with eyebrow "Product #N" + "Edit {name}" title node.
+- Body: Thumbnail section — `next/image` with `fill` + `object-cover` + `rounded-xl` inside `relative h-52 w-full overflow-hidden` container. Overlay `bg-black/30` with Replace (Upload icon) + Remove (Trash2 icon) secondary Buttons. Hidden `<input type="file" accept="image/*" className="sr-only">` triggered via `fileInputRef.current?.click()`. Local image stored as object URL; revoked on remove. Falls back to `product.image` when no local image.
+- Body: `<hr className="border-neutral-400">` divider then `<ProductFormFields>`.
+- Seeding: `price` strips leading non-digit chars (`product.price.replace(/^[^\d]+/, '')`).
+- Footer: Cancel (secondary, `setMode('view')`) + Save Changes (primary-filled, type="submit").
+- Body+Footer wrapped in `<form onSubmit>` with `className="flex min-h-0 flex-1 flex-col"`.
 
 Header title pattern: passes a `<span>` (flex-col) as DrawerHeader's `title` ReactNode — outer span contains an aria-hidden eyebrow (`text-xs text-primary-500 "Product #N"`) and a visible name span (`text-base font-medium text-black`). The eyebrow is `aria-hidden="true"`, so `aria-labelledby` resolves cleanly to the product name only.
 
-DrawerHeader was NOT changed — `title: ReactNode` already accepts compound nodes. AddProductDrawer is unaffected.
+DrawerHeader `title: ReactNode` already accepted compound nodes. AddProductDrawer is unaffected.
 
 Body sections: Details header + Edit button (ghost `<button>` inline, `SquarePen` icon, primary-500), neutral-200 info card (label/value rows for Name/Stock/Price/Category/Status), divider, Delete section (`TriangleAlert` icon, danger Button full-width with `w-full justify-center`).
 
