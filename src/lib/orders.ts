@@ -48,6 +48,10 @@ export const STATUS_ORDER: Record<string, number> = {
   Cancelled: 3,
 }
 
+export function getOrderById(id: string): Order | undefined {
+  return SAMPLE_ORDERS.find((o) => o.id === id)
+}
+
 export function compareOrders(a: Order, b: Order, key: SortKey): number {
   switch (key) {
     case 'name':

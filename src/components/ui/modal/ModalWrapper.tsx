@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import { X } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -47,6 +47,10 @@ export default function ModalWrapper({
 }: ModalWrapperProps) {
   const panelRef = useRef<HTMLDivElement>(null)
   const previousFocusRef = useRef<HTMLElement | null>(null)
+  // Only portal after mount so the first client render matches the server
+  // (both render nothing), avoiding a hydration mismatch.
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
 
   // --- Body scroll lock ---
   useEffect(() => {
@@ -112,10 +116,10 @@ export default function ModalWrapper({
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [open, onClose])
 
-  // Render nothing on the server; portal to <body> on the client so the modal
-  // escapes any transformed ancestor (e.g. the slide-in drawer panel), which
-  // would otherwise become the containing block for `position: fixed`.
-  if (typeof document === 'undefined') return null
+  // Render nothing until mounted, then portal to <body> on the client so the
+  // modal escapes any transformed ancestor (e.g. the slide-in drawer panel),
+  // which would otherwise become the containing block for `position: fixed`.
+  if (!mounted) return null
 
   return createPortal(
     <div

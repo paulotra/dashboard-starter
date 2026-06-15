@@ -20,6 +20,16 @@ export interface Product {
 
 export type ProductSortKey = 'name' | 'stock' | 'category' | 'dateAdded' | 'price'
 
+/** A single line item within an order — a product plus the ordered quantity. */
+export interface OrderProduct {
+  id: string
+  name: string
+  category: string
+  quantity: number
+  price: string
+  image?: string
+}
+
 /* ─── Sort helper ────────────────────────────────────────────────────── */
 
 export function compareProducts(a: Product, b: Product, key: ProductSortKey): number {
@@ -253,3 +263,61 @@ export const SAMPLE_PRODUCTS: Product[] = [
     image: '/products/americano.png',
   },
 ]
+
+/* ─── Order line items (used by OrderedProductsTable) ─────────────────── */
+
+export const SAMPLE_ORDER_PRODUCTS: OrderProduct[] = [
+  {
+    id: '1',
+    name: 'Espresso',
+    category: 'Coffee',
+    quantity: 32,
+    price: '€49.50',
+    image: '/products/americano.png',
+  },
+  {
+    id: '2',
+    name: 'Tomato Soup',
+    category: 'Soup',
+    quantity: 14,
+    price: '€28.00',
+    image: '/products/minestrone.png',
+  },
+  {
+    id: '3',
+    name: 'Pumpkin Soup',
+    category: 'Soup',
+    quantity: 24,
+    price: '€21.60',
+    image: '/products/chicken-soup.png',
+  },
+  {
+    id: '4',
+    name: 'Espresso Blend',
+    category: 'Coffee',
+    quantity: 10,
+    price: '€62.50',
+    image: '/products/cappuccino.png',
+  },
+  {
+    id: '5',
+    name: 'Blueberry Muffin',
+    category: 'Tea',
+    quantity: 36,
+    price: '€32.40',
+    image: '/products/chamomile-tea.png',
+  },
+]
+
+/**
+ * Sum the quantity and price columns for an order's line items, returning
+ * the totals pre-formatted for display (price as a `€xx.xx` string).
+ */
+export function getOrderProductsTotals(products: OrderProduct[]): {
+  quantity: number
+  price: string
+} {
+  const quantity = products.reduce((sum, p) => sum + p.quantity, 0)
+  const price = products.reduce((sum, p) => sum + parseAmount(p.price), 0)
+  return { quantity, price: `€${price.toFixed(2)}` }
+}

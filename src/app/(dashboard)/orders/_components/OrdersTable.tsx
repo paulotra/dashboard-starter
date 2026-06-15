@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
+import Link from 'next/link'
 import { EllipsisVertical } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { SAMPLE_ORDERS, compareOrders } from '@/lib/orders'
@@ -241,9 +242,12 @@ export default function OrdersTable({
 
                   {/* Order # cell */}
                   <td className="px-3 py-3">
-                    <span className="text-primary-500 font-sans text-sm font-medium">
+                    <Link
+                      href={`/orders/${order.id}`}
+                      className="text-primary-500 focus-visible:outline-primary-500 rounded font-sans text-sm font-medium hover:underline focus-visible:outline-2"
+                    >
                       {order.orderNumber}
-                    </span>
+                    </Link>
                   </td>
 
                   {/* Status cell */}
