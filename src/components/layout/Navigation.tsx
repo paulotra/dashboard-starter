@@ -34,7 +34,7 @@ export default function Navigation({ onMenuClick }: NavigationProps) {
           <Icon size={16} className="text-primary-500" />
         </div>
         <div className="flex flex-col">
-          <h1 className="font-sans text-lg font-medium text-black">{current.label}</h1>
+          <h1>{current.label}</h1>
           <Breadcrumb items={[{ label: current.section }, { label: current.label }]} />
         </div>
       </div>

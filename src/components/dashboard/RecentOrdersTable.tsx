@@ -224,7 +224,7 @@ export default function RecentOrdersTable({
     <CardWrapper className={cn('flex flex-col gap-4 px-4 pt-4 pb-3', className)}>
       {/* Toolbar */}
       <div className="flex flex-col gap-0.5">
-        <h2 className="font-sans text-base font-medium text-black">{title}</h2>
+        <h2>{title}</h2>
         <p className="font-sans text-sm font-normal text-neutral-600">{resolvedSubtitle}</p>
       </div>
 
