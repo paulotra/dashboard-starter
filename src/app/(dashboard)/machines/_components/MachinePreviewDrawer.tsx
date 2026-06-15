@@ -5,7 +5,9 @@ import type { Machine } from '@/lib/machines'
 import { DrawerWrapper } from '@/components/ui/drawer'
 import MachinePreviewContent from './MachinePreviewContent'
 import MachineEditContent from './MachineEditContent'
+import MachineLogHistoryContent from './MachineLogHistoryContent'
 import type { MachineFieldValues } from './MachineFormFields'
+import type { MachineLogValues } from './MachineLogHistoryContent'
 
 export interface MachinePreviewDrawerProps {
   machine: Machine | null
@@ -15,6 +17,7 @@ export interface MachinePreviewDrawerProps {
   onLogMaintenance?: () => void
   onDelete?: () => void
   onSave?: (data: MachineFieldValues) => void
+  onLogSave?: (data: MachineLogValues) => void
 }
 
 export default function MachinePreviewDrawer({
@@ -25,8 +28,9 @@ export default function MachinePreviewDrawer({
   onLogMaintenance,
   onDelete,
   onSave,
+  onLogSave,
 }: MachinePreviewDrawerProps) {
-  const [mode, setMode] = useState<'view' | 'edit'>('view')
+  const [mode, setMode] = useState<'view' | 'edit' | 'log'>('view')
 
   // Guard-in-render reset: reset to view mode whenever the drawer opens or the
   // machine changes — React's recommended "reset state on prop change" pattern.
@@ -49,15 +53,27 @@ export default function MachinePreviewDrawer({
               onEdit?.()
               setMode('edit')
             }}
-            onLogMaintenance={onLogMaintenance}
+            onLogMaintenance={() => {
+              onLogMaintenance?.()
+              setMode('log')
+            }}
             onDelete={onDelete}
           />
-        ) : (
+        ) : mode === 'edit' ? (
           <MachineEditContent
             machine={machine}
             onCancel={() => setMode('view')}
             onSave={(data) => {
               onSave?.(data)
+              setMode('view')
+            }}
+          />
+        ) : (
+          <MachineLogHistoryContent
+            machine={machine}
+            onCancel={() => setMode('view')}
+            onSave={(data) => {
+              onLogSave?.(data)
               setMode('view')
             }}
           />

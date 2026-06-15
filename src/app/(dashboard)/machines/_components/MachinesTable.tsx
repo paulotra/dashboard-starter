@@ -251,14 +251,11 @@ export default function MachinesTable({
                     onClick={isSelectable ? () => onMachineSelect!(machine) : undefined}
                     className={cn(
                       'border-border-color h-20 border-b last:border-b-0',
-                      isSelectable && 'cursor-pointer hover:bg-primary-100'
+                      isSelectable && 'hover:bg-primary-100 cursor-pointer'
                     )}
                   >
                     {/* Toggle cell — stop propagation so row click isn't triggered */}
-                    <td
-                      className="py-3 pl-3 text-center"
-                      onClick={(e) => e.stopPropagation()}
-                    >
+                    <td className="py-3 pl-3 text-center" onClick={(e) => e.stopPropagation()}>
                       <Switch
                         checked={isActive}
                         onChange={(checked) => handleToggle(machine.id, checked)}
@@ -287,7 +284,7 @@ export default function MachinesTable({
                                 e.stopPropagation()
                                 onMachineSelect!(machine)
                               }}
-                              className="font-sans text-sm font-medium text-black focus-visible:outline-2 focus-visible:outline-primary-500"
+                              className="focus-visible:outline-primary-500 text-left font-sans text-sm font-medium text-black focus-visible:outline-2"
                             >
                               {machine.name}
                             </button>
@@ -325,10 +322,7 @@ export default function MachinesTable({
                     </td>
 
                     {/* Action cell — stop propagation so ⋮ button doesn't trigger row select */}
-                    <td
-                      className="py-3 pr-4 pl-3"
-                      onClick={(e) => e.stopPropagation()}
-                    >
+                    <td className="py-3 pr-4 pl-3" onClick={(e) => e.stopPropagation()}>
                       <button
                         type="button"
                         aria-label={`More actions for ${machine.name}`}
