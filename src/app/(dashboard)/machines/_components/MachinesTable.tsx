@@ -34,6 +34,8 @@ export interface MachinesTableProps {
   machines?: Machine[]
   title?: string
   className?: string
+  /** Called with the clicked machine when a row is selected. */
+  onMachineSelect?: (machine: Machine) => void
 }
 
 /* ─── Component ──────────────────────────────────────────────────────── */
@@ -42,6 +44,7 @@ export default function MachinesTable({
   machines = SAMPLE_MACHINES,
   title = 'Machines',
   className,
+  onMachineSelect,
 }: MachinesTableProps) {
   /* ── Derive unique categories from data (no hardcoding) ── */
   const allCategories = useMemo(
@@ -240,13 +243,22 @@ export default function MachinesTable({
             ) : (
               sortedMachines.map((machine) => {
                 const isActive = activeStates[machine.id] ?? machine.active
+                const isSelectable = Boolean(onMachineSelect)
+
                 return (
                   <tr
                     key={machine.id}
-                    className="border-border-color h-20 border-b last:border-b-0"
+                    onClick={isSelectable ? () => onMachineSelect!(machine) : undefined}
+                    className={cn(
+                      'border-border-color h-20 border-b last:border-b-0',
+                      isSelectable && 'cursor-pointer hover:bg-primary-100'
+                    )}
                   >
-                    {/* Toggle cell */}
-                    <td className="py-3 pl-3 text-center">
+                    {/* Toggle cell — stop propagation so row click isn't triggered */}
+                    <td
+                      className="py-3 pl-3 text-center"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <Switch
                         checked={isActive}
                         onChange={(checked) => handleToggle(machine.id, checked)}
@@ -254,10 +266,12 @@ export default function MachinesTable({
                       />
                     </td>
 
-                    {/* Machine cell: thumbnail + name + serial */}
+                    {/* Machine cell: thumbnail + name + serial
+                        The name is a <button> so keyboard users can reach and
+                        activate the row preview without the row needing
+                        role="button" (which conflicts with implicit role="row"). */}
                     <td className="py-3 pr-3 pl-3">
                       <div className="flex items-center gap-3">
-                        {/* Product thumbnail */}
                         <Image
                           src={machine.image}
                           alt={machine.name}
@@ -266,9 +280,22 @@ export default function MachinesTable({
                           className="bg-primary-100 size-20 shrink-0 rounded-xl object-cover"
                         />
                         <div className="flex flex-col gap-0.5">
-                          <span className="font-sans text-sm font-medium text-black">
-                            {machine.name}
-                          </span>
+                          {isSelectable ? (
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                onMachineSelect!(machine)
+                              }}
+                              className="font-sans text-sm font-medium text-black focus-visible:outline-2 focus-visible:outline-primary-500"
+                            >
+                              {machine.name}
+                            </button>
+                          ) : (
+                            <span className="font-sans text-sm font-medium text-black">
+                              {machine.name}
+                            </span>
+                          )}
                           <span className="font-sans text-sm font-normal text-neutral-600">
                             Serial number : {machine.serialNumber}
                           </span>
@@ -297,8 +324,11 @@ export default function MachinesTable({
                       </span>
                     </td>
 
-                    {/* Action cell */}
-                    <td className="py-3 pr-4 pl-3">
+                    {/* Action cell — stop propagation so ⋮ button doesn't trigger row select */}
+                    <td
+                      className="py-3 pr-4 pl-3"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <button
                         type="button"
                         aria-label={`More actions for ${machine.name}`}

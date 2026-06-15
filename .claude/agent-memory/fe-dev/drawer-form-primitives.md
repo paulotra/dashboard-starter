@@ -81,3 +81,22 @@ When `onProductSelect` is not provided, renders exactly as before (no `<button>`
 ## Products page wiring
 
 `src/app/(dashboard)/products/page.tsx` — `const [addOpen, setAddOpen] = useState(false)` + `const [selected, setSelected] = useState<Product | null>(null)`. `onProductSelect={setSelected}` on ProductsTable. `<ProductPreviewDrawer product={selected} open={selected !== null} onClose={() => setSelected(null)} />` coexists with AddProductDrawer. useMemo deps stay `[]`.
+
+## MachinePreviewDrawer + MachinePreviewContent (2026-06-16)
+
+Files:
+- `src/app/(dashboard)/machines/_components/MachinePreviewContent.tsx` — mirrors ProductPreviewContent. Props: `{ machine, onEdit, onLogMaintenance?, onDelete? }`. Sections: DrawerHeader with eyebrow "Machine #N" (aria-hidden) + name; Details card (Name/Serial number/Category/Address/Status); Maintenance history list (date left in primary-500, description right in black, each entry `flex items-center justify-between rounded-xl bg-neutral-200 px-4 py-2`); Delete section with ConfirmModal. "Log maintenance" button uses `Wrench` lucide icon.
+- `src/app/(dashboard)/machines/_components/MachinePreviewDrawer.tsx` — no view/edit toggle (no edit form designed). Renders `MachinePreviewContent` directly inside `DrawerWrapper`. Props: `{ machine: Machine | null, open, onClose, onEdit?, onLogMaintenance?, onDelete? }`.
+
+`src/lib/machines.ts` — `Machine` interface extended with `address: string` and `maintenanceHistory: MaintenanceEntry[]` (new `MaintenanceEntry { date, description }` interface). All 5 SAMPLE_MACHINES populated with Amsterdam addresses and Dutch maintenance entries (3 per machine, most recent first).
+
+`MachinesTable` — `onMachineSelect?(machine: Machine)` prop added. Same selectable-row pattern as ProductsTable: tr onClick + cursor-pointer/hover:bg-primary-100 when selectable; machine name as `<button>` with stopPropagation; stopPropagation on toggle cell and action cell.
+
+`machines/page.tsx` — `const [selected, setSelected] = useState<Machine | null>(null)` added; `onMachineSelect={setSelected}` on MachinesTable; `<MachinePreviewDrawer>` rendered alongside AddMachineDrawer.
+
+## AddMachineDrawer + MachineFormFields (2026-06-16)
+
+Mirrors AddProductDrawer exactly. Files:
+- `src/app/(dashboard)/machines/_components/MachineFormFields.tsx` — controlled field set exporting `MachineFieldValues { name, active, serialNumber, category, location }`. Categories derived from `SAMPLE_MACHINES` (Espressomachines, Koffiemachines, Volautomaten). No € prefix on any field — all plain text inputs. Description copy: "Machine is active and in use".
+- `src/app/(dashboard)/machines/_components/AddMachineDrawer.tsx` — `open`, `onClose`, `onSubmit?(data: MachineFieldValues & { thumbnail: File | null })`. Submit button "Create Machine". Active defaults to `true`.
+- `src/app/(dashboard)/machines/page.tsx` — wired with `useState(false)` + `<AddMachineDrawer open={addOpen} onClose={() => setAddOpen(false)} />`. useMemo deps stay `[]`.
