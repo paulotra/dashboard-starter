@@ -36,13 +36,22 @@ Existing token additions beyond Tailwind defaults:
 - Full primary/neutral/secondary/red/green/yellow scales already in globals.css
 
 Components in src/components/:
-- `Card.tsx` — shared card wrapper (`rounded-xl bg-white p-4` default); props: `children`, `className` (merged via `cn`, callers override padding etc.), spreads `ComponentPropsWithoutRef<'div'>`. Default export + `CardProps` named export.
-- `BadgeStatus.tsx` — status badge (Pending/Completed/Processing/Cancelled variants), reuse for order status
+
+ui/ primitives:
+- `CardWrapper.tsx` — card chrome (`rounded-xl bg-white p-4`); spreads `ComponentPropsWithoutRef<'div'>`, merges className via cn. Default export + `CardWrapperProps`.
+- `Avatar.tsx` — circular initials avatar; `size-10 rounded-full bg-primary-100 text-primary-500 text-xs font-medium`; props: `initials` (string), `className`, spreads div props; `aria-hidden="true"`. Default export + `AvatarProps`.
+- `BadgeStatus.tsx` — status badge (Pending/Completed/Processing/Cancelled variants)
 - `Button.tsx` — action button with variant prop
-- `StatsCard.tsx` — KPI metric card; uses `<Card className="flex flex-col gap-2.5">` (default p-4)
-- `RecentOrdersTable.tsx` — client component ('use client') with useState sort state + useMemo sorted rows; uses `<Card className="flex flex-col gap-4 px-4 pt-4 pb-3">` (overrides default padding via tailwind-merge); exports `Order` interface and `DEFAULT_ORDERS`; sort cycles asc→desc on same column, resets to asc on new column
+- `Logo.tsx`, `Switch.tsx`
+
+dashboard/ components:
+- `StatsCard.tsx` — KPI metric card; uses `<CardWrapper className="flex flex-col gap-2.5">`
+- `RecentOrdersTable.tsx` — client component ('use client') with useState sort + useMemo; imports Avatar from ui/Avatar (extracted); exports `Order` interface and `DEFAULT_ORDERS`
+- `TopCustomers.tsx` — top customers list card; uses CardWrapper (p-0 override) + Avatar; props: `customers` (Customer[]), `title`, `onAllCustomersClick`, `allCustomersHref`, `className`; exports `Customer` interface and `DEFAULT_CUSTOMERS`; pluralizes machine/order counts
+
+layout/ components:
 - `DashboardShell.tsx` — layout wrapper (client component with sidebar toggle)
-- `Sidebar.tsx`, `Navigation.tsx`, `Logo.tsx`, `Breadcrumb.tsx`, `Switch.tsx`
+- `Sidebar.tsx`, `Navigation.tsx`, `Breadcrumb.tsx`
 
 Icon pattern: use lucide-react directly (NOT a custom Icon abstraction). `src/components/icons/` directory was deleted — all icons now come from lucide-react. Icons used in RecentOrdersTable: `EllipsisVertical` (action menu), `ChevronsUpDown` (unsorted), `ChevronUp` (asc), `ChevronDown` (desc). Size via `size={14}` prop + `aria-hidden="true"`.
 

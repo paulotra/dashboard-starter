@@ -1,5 +1,6 @@
 import StatsCard from '@/components/dashboard/StatsCard'
 import RecentOrdersTable from '@/components/dashboard/RecentOrdersTable'
+import TopCustomers from '@/components/dashboard/TopCustomers'
 
 export default function DashboardPage() {
   return (
@@ -19,7 +20,12 @@ export default function DashboardPage() {
           subtitle={<span className="text-secondary-500">Awaiting confirmation</span>}
         />
       </div>
-      <RecentOrdersTable />
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
+        <div className="lg:col-span-2">
+          <RecentOrdersTable />
+        </div>
+        <TopCustomers />
+      </div>
     </div>
   )
 }

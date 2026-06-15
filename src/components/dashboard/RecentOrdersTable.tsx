@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils'
 import CardWrapper from '@/components/ui/CardWrapper'
 import BadgeStatus from '@/components/ui/BadgeStatus'
 import type { BadgeStatusProps } from '@/components/ui/BadgeStatus'
+import Avatar from '@/components/ui/Avatar'
 import { EllipsisVertical, ChevronsUpDown, ChevronUp, ChevronDown } from 'lucide-react'
 
 export interface Order {
@@ -370,23 +371,3 @@ function SortIndicator({ isActive, direction }: SortIndicatorProps) {
   )
 }
 
-/* ─── Avatar (co-located — small enough to not warrant its own file) ── */
-
-interface AvatarProps {
-  initials: string
-  className?: string
-}
-
-function Avatar({ initials, className }: AvatarProps) {
-  return (
-    <div
-      aria-hidden="true"
-      className={cn(
-        'bg-primary-100 flex size-10 shrink-0 items-center justify-center rounded-full',
-        className
-      )}
-    >
-      <span className="text-primary-500 font-sans text-xs font-medium">{initials}</span>
-    </div>
-  )
-}
