@@ -4,62 +4,68 @@ import { useState, useMemo } from 'react'
 import Image from 'next/image'
 import { EllipsisVertical } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { SAMPLE_MACHINES, compareMachines } from '@/lib/machines'
-import type { Machine, MachineSortKey } from '@/lib/machines'
+import { SAMPLE_PRODUCTS, compareProducts } from '@/lib/products'
+import type { Product, ProductSortKey } from '@/lib/products'
 import type { SortDirection } from '@/lib/orders'
 import CardWrapper from '@/components/ui/CardWrapper'
 import FilterChip from '@/components/ui/FilterChip'
 import Switch from '@/components/ui/Switch'
 import SortIndicator from '@/components/ui/SortIndicator'
 import TableSearch from '@/components/form/TableSearch'
+import Pagination from '@/components/ui/Pagination'
 
 /* ─── Column config ──────────────────────────────────────────────────── */
 
 interface Column {
-  key: MachineSortKey
+  key: ProductSortKey
   label: string
+  align?: 'left' | 'center' | 'right'
   minWidth?: string
 }
 
 const COLUMNS: Column[] = [
-  { key: 'name', label: 'Machine', minWidth: 'min-w-64' },
-  { key: 'category', label: 'Category', minWidth: 'min-w-36' },
-  { key: 'lastMaintenance', label: 'Last maintenance', minWidth: 'min-w-36' },
-  { key: 'dateAdded', label: 'Date Added', minWidth: 'min-w-32' },
+  { key: 'name', label: 'Product', align: 'left', minWidth: 'min-w-56' },
+  { key: 'stock', label: 'Stock', align: 'left', minWidth: 'min-w-20' },
+  { key: 'category', label: 'Category', align: 'left', minWidth: 'min-w-28' },
+  { key: 'dateAdded', label: 'Date Added', align: 'left', minWidth: 'min-w-32' },
+  { key: 'price', label: 'Price', align: 'right', minWidth: 'min-w-20' },
 ]
 
 /* ─── Props ──────────────────────────────────────────────────────────── */
 
-export interface MachinesTableProps {
-  machines?: Machine[]
+export interface ProductsTableProps {
+  products?: Product[]
   title?: string
+  pageSize?: number
   className?: string
 }
 
 /* ─── Component ──────────────────────────────────────────────────────── */
 
-export default function MachinesTable({
-  machines = SAMPLE_MACHINES,
-  title = 'Machines',
+export default function ProductsTable({
+  products = SAMPLE_PRODUCTS,
+  title = 'Products',
+  pageSize = 7,
   className,
-}: MachinesTableProps) {
+}: ProductsTableProps) {
   /* ── Derive unique categories from data (no hardcoding) ── */
   const allCategories = useMemo(
-    () => Array.from(new Set(machines.map((m) => m.category))).sort(),
-    [machines]
+    () => Array.from(new Set(products.map((p) => p.category))).sort(),
+    [products]
   )
 
   /* ── UI state ── */
-  // Each machine's active state tracked locally by id
+  // Each product's active state tracked locally by id
   const [activeStates, setActiveStates] = useState<Record<string, boolean>>(() =>
-    Object.fromEntries(machines.map((m) => [m.id, m.active]))
+    Object.fromEntries(products.map((p) => [p.id, p.active]))
   )
   // null = no status filter; true = Active only; false = Inactive only
   const [statusFilter, setStatusFilter] = useState<boolean | null>(null)
   const [categoryFilters, setCategoryFilters] = useState<Set<string>>(new Set())
   const [search, setSearch] = useState('')
-  const [sortKey, setSortKey] = useState<MachineSortKey>('name')
+  const [sortKey, setSortKey] = useState<ProductSortKey>('name')
   const [sortDir, setSortDir] = useState<SortDirection>('asc')
+  const [currentPage, setCurrentPage] = useState(1)
 
   /* ── Handlers ── */
   function handleToggle(id: string, checked: boolean) {
@@ -68,6 +74,7 @@ export default function MachinesTable({
 
   function handleStatusFilter(value: boolean) {
     setStatusFilter((prev) => (prev === value ? null : value))
+    setCurrentPage(1)
   }
 
   function handleCategoryFilter(category: string) {
@@ -80,46 +87,61 @@ export default function MachinesTable({
       }
       return next
     })
+    setCurrentPage(1)
   }
 
   function handleSearch(value: string) {
     setSearch(value)
+    setCurrentPage(1)
   }
 
-  function handleSort(key: MachineSortKey) {
+  function handleSort(key: ProductSortKey) {
     if (key === sortKey) {
       setSortDir((prev) => (prev === 'asc' ? 'desc' : 'asc'))
     } else {
       setSortKey(key)
       setSortDir('asc')
     }
+    setCurrentPage(1)
+  }
+
+  function handlePageChange(page: number) {
+    setCurrentPage(page)
   }
 
   /* ── Derived data ── */
-  const filteredMachines = useMemo(() => {
+  const filteredProducts = useMemo(() => {
     const q = search.trim().toLowerCase()
-    return machines.filter((machine) => {
-      const currentActive = activeStates[machine.id] ?? machine.active
+    return products.filter((product) => {
+      const currentActive = activeStates[product.id] ?? product.active
 
       const matchesStatus = statusFilter === null || currentActive === statusFilter
 
-      const matchesCategory = categoryFilters.size === 0 || categoryFilters.has(machine.category)
+      const matchesCategory =
+        categoryFilters.size === 0 || categoryFilters.has(product.category)
 
-      const matchesSearch =
-        q === '' ||
-        machine.name.toLowerCase().includes(q) ||
-        machine.serialNumber.toLowerCase().includes(q)
+      const matchesSearch = q === '' || product.name.toLowerCase().includes(q)
 
       return matchesStatus && matchesCategory && matchesSearch
     })
-  }, [machines, activeStates, statusFilter, categoryFilters, search])
+  }, [products, activeStates, statusFilter, categoryFilters, search])
 
-  const sortedMachines = useMemo(() => {
-    return [...filteredMachines].sort((a, b) => {
-      const cmp = compareMachines(a, b, sortKey)
+  const sortedProducts = useMemo(() => {
+    return [...filteredProducts].sort((a, b) => {
+      const cmp = compareProducts(a, b, sortKey)
       return sortDir === 'asc' ? cmp : -cmp
     })
-  }, [filteredMachines, sortKey, sortDir])
+  }, [filteredProducts, sortKey, sortDir])
+
+  const totalPages = Math.max(1, Math.ceil(sortedProducts.length / pageSize))
+
+  const pagedProducts = useMemo(() => {
+    const start = (currentPage - 1) * pageSize
+    return sortedProducts.slice(start, start + pageSize)
+  }, [sortedProducts, currentPage, pageSize])
+
+  const showingFrom = sortedProducts.length === 0 ? 0 : (currentPage - 1) * pageSize + 1
+  const showingTo = Math.min(currentPage * pageSize, sortedProducts.length)
 
   return (
     <CardWrapper className={cn('flex flex-col gap-4 px-4 pt-4 pb-3', className)}>
@@ -129,7 +151,7 @@ export default function MachinesTable({
         <div className="flex flex-col gap-0.5">
           <h2>{title}</h2>
           <p className="font-sans text-sm font-normal text-neutral-600">
-            {machines.length} total machines
+            {products.length} total products
           </p>
         </div>
 
@@ -168,8 +190,8 @@ export default function MachinesTable({
           <TableSearch
             value={search}
             onChange={handleSearch}
-            placeholder="Search machine…"
-            label="Search machines"
+            placeholder="Search product…"
+            label="Search products"
           />
         </div>
       </div>
@@ -204,6 +226,7 @@ export default function MachinesTable({
                     className={cn(
                       'h-11 px-3',
                       'bg-primary-100 text-left font-sans text-xs font-medium whitespace-nowrap text-neutral-600',
+                      col.align === 'right' && 'text-right',
                       col.minWidth
                     )}
                   >
@@ -211,7 +234,10 @@ export default function MachinesTable({
                       type="button"
                       aria-label={`Sort by ${col.label}${isActive ? `, currently ${ariaSortValue}` : ''}`}
                       onClick={() => handleSort(col.key)}
-                      className="focus-visible:outline-primary-500 relative inline-flex h-full w-full items-center gap-1 pr-4 focus-visible:outline-2"
+                      className={cn(
+                        'focus-visible:outline-primary-500 relative inline-flex h-full w-full items-center gap-1 pr-4 focus-visible:outline-2',
+                        col.align === 'right' && 'justify-end'
+                      )}
                     >
                       <span>{col.label}</span>
                       <SortIndicator isActive={isActive} direction={sortDir} />
@@ -228,72 +254,73 @@ export default function MachinesTable({
           </thead>
 
           <tbody>
-            {sortedMachines.length === 0 ? (
+            {pagedProducts.length === 0 ? (
               <tr>
                 <td
                   colSpan={COLUMNS.length + 2}
                   className="py-10 text-center font-sans text-sm text-neutral-600"
                 >
-                  No machines match your search or filters.
+                  No products match your search or filters.
                 </td>
               </tr>
             ) : (
-              sortedMachines.map((machine) => {
-                const isActive = activeStates[machine.id] ?? machine.active
+              pagedProducts.map((product) => {
+                const isActive = activeStates[product.id] ?? product.active
                 return (
                   <tr
-                    key={machine.id}
+                    key={product.id}
                     className="border-border-color h-20 border-b last:border-b-0"
                   >
                     {/* Toggle cell */}
                     <td className="py-3 pl-3 text-center">
                       <Switch
                         checked={isActive}
-                        onChange={(checked) => handleToggle(machine.id, checked)}
-                        aria-label={`Toggle ${machine.name}`}
+                        onChange={(checked) => handleToggle(product.id, checked)}
+                        aria-label={`Toggle ${product.name}`}
                       />
                     </td>
 
-                    {/* Machine cell: thumbnail + name + serial */}
+                    {/* Product cell: thumbnail + name */}
                     <td className="py-3 pr-3 pl-3">
                       <div className="flex items-center gap-3">
-                        {/* Product thumbnail */}
                         <Image
-                          src={machine.image}
-                          alt={machine.name}
+                          src={product.image}
+                          alt={product.name}
                           width={80}
                           height={80}
                           className="bg-primary-100 size-20 shrink-0 rounded-xl object-cover"
                         />
-                        <div className="flex flex-col gap-0.5">
-                          <span className="font-sans text-sm font-medium text-black">
-                            {machine.name}
-                          </span>
-                          <span className="font-sans text-sm font-normal text-neutral-600">
-                            Serial number : {machine.serialNumber}
-                          </span>
-                        </div>
+                        <span className="font-sans text-sm font-medium text-black">
+                          {product.name}
+                        </span>
                       </div>
+                    </td>
+
+                    {/* Stock cell */}
+                    <td className="px-3 py-3">
+                      <span className="font-sans text-sm font-normal text-black">
+                        {product.stock}
+                      </span>
                     </td>
 
                     {/* Category cell */}
                     <td className="px-3 py-3">
                       <span className="font-sans text-sm font-normal text-black">
-                        {machine.category}
-                      </span>
-                    </td>
-
-                    {/* Last maintenance cell */}
-                    <td className="px-3 py-3">
-                      <span className="font-sans text-sm font-normal text-black">
-                        {machine.lastMaintenance}
+                        {product.category}
                       </span>
                     </td>
 
                     {/* Date Added cell */}
                     <td className="px-3 py-3">
                       <span className="font-sans text-sm font-normal text-black">
-                        {machine.dateAdded}
+                        {product.dateAdded}
+                      </span>
+                    </td>
+
+                    {/* Price cell */}
+                    <td className="px-3 py-3 text-right">
+                      <span className="font-sans text-sm font-medium text-black">
+                        {product.price}
                       </span>
                     </td>
 
@@ -301,7 +328,7 @@ export default function MachinesTable({
                     <td className="py-3 pr-4 pl-3">
                       <button
                         type="button"
-                        aria-label={`More actions for ${machine.name}`}
+                        aria-label={`More actions for ${product.name}`}
                         className="bg-primary-100 focus-visible:outline-primary-500 flex size-8 items-center justify-center rounded-full text-neutral-600 focus-visible:outline-2"
                       >
                         <EllipsisVertical aria-hidden="true" size={14} />
@@ -313,6 +340,18 @@ export default function MachinesTable({
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* ── Footer ── */}
+      <div className="flex items-center justify-between">
+        <p className="font-sans text-xs font-normal text-black">
+          Showing {showingFrom}–{showingTo} of {sortedProducts.length} results
+        </p>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
       </div>
     </CardWrapper>
   )

@@ -130,7 +130,7 @@ export default function OrdersTable({
   return (
     <CardWrapper className={cn('flex flex-col gap-4 px-4 pt-4 pb-3', className)}>
       {/* ── Toolbar ── */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         {/* Left: title + subtitle */}
         <div className="flex flex-col gap-0.5">
           <h2>{title}</h2>

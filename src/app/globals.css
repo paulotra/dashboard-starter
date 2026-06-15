@@ -3,7 +3,7 @@
 /* ─── Tailwind v4 theme wiring ───────────────────────────────── */
 @theme inline {
   /* Primary color scale */
-  --color-primary-100: #f2f6f9;
+  --color-primary-100: #f4f8fb;
   --color-primary-200: #dae9f4;
   --color-primary-300: #90b5ff;
   --color-primary-400: #5286ff;
@@ -104,17 +104,19 @@
   --text-2xs: 0.625rem; /* 10px */
   --font-mono: var(--font-geist-mono);
 
-  /* Semantic aliases */
-  --color-white: #ffffff;
-  --color-white-60: #ffffff99;
-  --color-white-20: #ffffff33;
-  --color-black: #000000;
-  --color-shadow: #e6e6e6;
-  --color-body-color: #f4f8fb;
-  --color-border-color: #dae9f4;
-  --color-btn-primary-bg: #dae9f4;
-  --color-btn-primary-bg-filled: #3564fc;
-  --color-btn-secondary-bg: #ffffff;
+  /* Semantic aliases — reference primitives, never raw hex (avoids drift).
+     Plain white/black use Tailwind's built-in `bg-white` / `text-black`. */
+  --color-white-60: #ffffff60;
+  --color-white-20: #ffffff20;
+  --color-shadow: var(--color-neutral-300);
+  --color-body-color: var(--color-primary-100);
+  --color-border-color: var(--color-primary-200);
+  --color-btn-primary-bg: var(--color-primary-200);
+  --color-btn-primary-bg-filled: var(--color-primary-500);
+  --color-btn-secondary-bg: var(--color-neutral-100);
+
+  /* Shadows */
+  --shadow-card: 0 2px 8px var(--color-primary-200);
 }
 
 /* Base */

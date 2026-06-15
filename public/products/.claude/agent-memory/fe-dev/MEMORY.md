@@ -1,0 +1,2 @@
+- [Project stack](project-stack.md) — Next.js 16, React 19, TS strict, Tailwind v4, pnpm; key aliases and constraints
+- [Codebase conventions](codebase-conventions.md) — Component locations, page pattern, table pattern, shared sort/parse helpers

@@ -1,5 +1,6 @@
 import type { BadgeStatusProps } from '@/components/ui/BadgeStatus'
 import { MONTH_MAP, parseDate } from '@/lib/dates'
+import { parseAmount as _parseAmount } from '@/lib/numbers'
 
 // Re-export so existing callers that import MONTH_MAP/parseDate from here
 // continue to work without changes.
@@ -28,8 +29,10 @@ export function parseQuantity(value: string): number {
   return match ? parseInt(match[1], 10) : 0
 }
 
+// Re-export the shared implementation so callers that import parseAmount
+// from here continue to work without changes.
 export function parseAmount(value: string): number {
-  return parseFloat(value.replace(/[^0-9.]/g, '')) || 0
+  return _parseAmount(value)
 }
 
 

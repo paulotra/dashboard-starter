@@ -7,7 +7,7 @@ export interface CardWrapperProps extends ComponentPropsWithoutRef<'div'> {
 
 export default function CardWrapper({ className, children, ...props }: CardWrapperProps) {
   return (
-    <div className={cn('rounded-xl bg-white p-4', className)} {...props}>
+    <div className={cn('shadow-card rounded-xl bg-white p-4', className)} {...props}>
       {children}
     </div>
   )
