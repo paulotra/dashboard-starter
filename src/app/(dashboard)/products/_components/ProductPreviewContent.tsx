@@ -1,7 +1,10 @@
-import type { ReactNode } from 'react'
+'use client'
+
+import { useState, type ReactNode } from 'react'
 import { SquarePen, TriangleAlert, Trash2 } from 'lucide-react'
 import type { Product } from '@/lib/products'
 import { DrawerHeader, DrawerBody } from '@/components/ui/drawer'
+import { ConfirmModal } from '@/components/ui/modal'
 import Button from '@/components/ui/Button'
 import BadgeStatus from '@/components/ui/BadgeStatus'
 
@@ -35,6 +38,8 @@ export default function ProductPreviewContent({
   onEdit,
   onDelete,
 }: ProductPreviewContentProps) {
+  const [confirmOpen, setConfirmOpen] = useState(false)
+
   const title: ReactNode = (
     <span className="flex flex-col gap-0.5">
       <span className="font-sans text-xs font-normal text-primary-500" aria-hidden="true">
@@ -95,7 +100,7 @@ export default function ProductPreviewContent({
               variant="danger"
               icon={Trash2}
               type="button"
-              onClick={onDelete}
+              onClick={() => setConfirmOpen(true)}
               className="w-full justify-center"
             >
               Delete Product
@@ -103,6 +108,24 @@ export default function ProductPreviewContent({
           </div>
         </div>
       </DrawerBody>
+
+      <ConfirmModal
+        open={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        onConfirm={() => {
+          setConfirmOpen(false)
+          onDelete?.()
+        }}
+        title="Delete Product?"
+        description={
+          <>
+            This action cannot be undone. The{' '}
+            <span className="font-medium text-black">Product #{product.id}</span> and all its
+            associated data will be permanently deleted.
+          </>
+        }
+        confirmLabel="Delete Product"
+      />
     </>
   )
 }
