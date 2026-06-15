@@ -44,6 +44,10 @@ ui/ primitives:
 - `Button.tsx` — action button with variant prop
 - `Logo.tsx`, `Switch.tsx`
 
+Page-level feature tables are colocated under `_components/` in each route dir:
+- `app/(dashboard)/orders/_components/OrdersTable.tsx` — full-featured orders table (search, status filter chips, sort, pagination)
+- `app/(dashboard)/machines/_components/MachinesTable.tsx` — machines table (status filter, dynamic category chips derived from data, search, sort by name/category/lastMaintenance/dateAdded, per-row Switch toggle). No pagination. Image placeholder: `bg-primary-100 rounded-xl` + lucide `Coffee` icon.
+
 dashboard/ components:
 - `StatsCard.tsx` — KPI metric card; uses `<CardWrapper className="flex flex-col gap-2.5">`
 - `RecentOrdersTable.tsx` — client component ('use client') with useState sort + useMemo; imports from lib/orders.ts + ui/SortIndicator; re-exports `Order` and `DEFAULT_ORDERS` for backward compat
@@ -51,7 +55,9 @@ dashboard/ components:
 - `TopCustomers.tsx` — top customers list card; uses CardWrapper (p-0 override) + Avatar; props: `customers` (Customer[]), `title`, `onAllCustomersClick`, `allCustomersHref`, `className`; exports `Customer` interface and `DEFAULT_CUSTOMERS`; pluralizes machine/order counts
 
 lib/ shared modules:
-- `lib/orders.ts` — source of truth for Order interface, SortKey/SortDirection types, parse helpers, STATUS_ORDER, compareOrders, DEFAULT_ORDERS (8 rows), SAMPLE_ORDERS (30 rows)
+- `lib/dates.ts` — shared date parser: `MONTH_MAP` + `parseDate("DD Mon HH:mm")` → timestamp. Single source of truth for date parsing. Both `orders.ts` and `machines.ts` import from here.
+- `lib/orders.ts` — source of truth for Order interface, SortKey/SortDirection types, parse helpers, STATUS_ORDER, compareOrders, DEFAULT_ORDERS (8 rows), SAMPLE_ORDERS (30 rows). Re-exports MONTH_MAP/parseDate from lib/dates.ts for backward compat.
+- `lib/machines.ts` — Machine interface, MachineSortKey type, compareMachines helper, SAMPLE_MACHINES (5 rows). Imports parseDate from lib/dates.ts. Re-exports SortDirection from lib/orders.ts.
 
 ui/ primitives:
 - `ui/SortIndicator.tsx` — presentational sort icon (ChevronsUpDown/ChevronUp/ChevronDown); props: isActive, direction; imported from lib/orders types

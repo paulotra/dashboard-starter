@@ -1,4 +1,9 @@
 import type { BadgeStatusProps } from '@/components/ui/BadgeStatus'
+import { MONTH_MAP, parseDate } from '@/lib/dates'
+
+// Re-export so existing callers that import MONTH_MAP/parseDate from here
+// continue to work without changes.
+export { MONTH_MAP, parseDate }
 
 /* ─── Types ──────────────────────────────────────────────────────────── */
 
@@ -27,32 +32,6 @@ export function parseAmount(value: string): number {
   return parseFloat(value.replace(/[^0-9.]/g, '')) || 0
 }
 
-export const MONTH_MAP: Record<string, number> = {
-  jan: 0,
-  feb: 1,
-  mar: 2,
-  apr: 3,
-  may: 4,
-  jun: 5,
-  jul: 6,
-  aug: 7,
-  sep: 8,
-  oct: 9,
-  nov: 10,
-  dec: 11,
-}
-
-export function parseDate(value: string): number {
-  // Format: "04 jun 13:46"
-  const parts = value.trim().split(' ')
-  if (parts.length !== 3) return 0
-  const [dayStr, monthStr, timeStr] = parts
-  const day = parseInt(dayStr, 10)
-  const month = MONTH_MAP[monthStr.toLowerCase()] ?? 0
-  const [hours, minutes] = timeStr.split(':').map(Number)
-  const now = new Date()
-  return new Date(now.getFullYear(), month, day, hours, minutes).getTime()
-}
 
 function parseOrderNumber(value: string): number {
   // Strip leading "#" and parse, e.g. "#1042" → 1042

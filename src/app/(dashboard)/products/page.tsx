@@ -1,3 +1,3 @@
-export default function uproductsPage() {
+export default function ProductsPage() {
   return null;
 }
