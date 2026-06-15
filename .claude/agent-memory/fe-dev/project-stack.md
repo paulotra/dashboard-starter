@@ -40,13 +40,14 @@ Components in src/components/:
 ui/ primitives:
 - `CardWrapper.tsx` — card chrome (`rounded-xl bg-white p-4`); spreads `ComponentPropsWithoutRef<'div'>`, merges className via cn. Default export + `CardWrapperProps`.
 - `Avatar.tsx` — circular initials avatar; `size-10 rounded-full bg-primary-100 text-primary-500 text-xs font-medium`; props: `initials` (string), `className`, spreads div props; `aria-hidden="true"`. Default export + `AvatarProps`.
-- `BadgeStatus.tsx` — status badge (Pending/Completed/Processing/Cancelled variants)
+- `BadgeStatus.tsx` — refactored to generic `variant` ('success'|'danger'|'warning'|'info'|'neutral') + `children` string API. Legacy `status` prop (OrderStatus union) still works via internal map for backward compat. Exports `BadgeVariant` and `OrderStatus` types.
 - `Button.tsx` — action button with variant prop
 - `Logo.tsx`, `Switch.tsx`
 
 Page-level feature tables are colocated under `_components/` in each route dir:
 - `app/(dashboard)/orders/_components/OrdersTable.tsx` — full-featured orders table (search, status filter chips, sort, pagination)
 - `app/(dashboard)/machines/_components/MachinesTable.tsx` — machines table (status filter, dynamic category chips derived from data, search, sort by name/category/lastMaintenance/dateAdded, per-row Switch toggle). No pagination. Image placeholder: `bg-primary-100 rounded-xl` + lucide `Coffee` icon.
+- `app/(dashboard)/customers/_components/CustomersTable.tsx` — customers table; props: customers?, title?, pageSize? (default 10), className?; columns: Customer (Avatar initials + name), Location, Status (BadgeStatus variant API), Orders (numeric right-aligned), Total Spent (medium right-aligned), action button. Filter chips derived from data. Search on name + location. Default sort: name asc.
 
 dashboard/ components:
 - `StatsCard.tsx` — KPI metric card; uses `<CardWrapper className="flex flex-col gap-2.5">`
@@ -58,6 +59,7 @@ lib/ shared modules:
 - `lib/dates.ts` — shared date parser: `MONTH_MAP` + `parseDate("DD Mon HH:mm")` → timestamp. Single source of truth for date parsing. Both `orders.ts` and `machines.ts` import from here.
 - `lib/orders.ts` — source of truth for Order interface, SortKey/SortDirection types, parse helpers, STATUS_ORDER, compareOrders, DEFAULT_ORDERS (8 rows), SAMPLE_ORDERS (30 rows). Re-exports MONTH_MAP/parseDate from lib/dates.ts for backward compat.
 - `lib/machines.ts` — Machine interface, MachineSortKey type, compareMachines helper, SAMPLE_MACHINES (5 rows). Imports parseDate from lib/dates.ts. Re-exports SortDirection from lib/orders.ts.
+- `lib/customers.ts` — Customer interface, CustomerStatus union, CustomerSortKey, SortDirection, compareCustomers (status sorted by ordinal: Activated→Deactivated→Invite Sent→Expired), SAMPLE_CUSTOMERS (22 rows = ~3 pages). Uses parseAmount from lib/numbers.
 
 ui/ primitives:
 - `ui/SortIndicator.tsx` — presentational sort icon (ChevronsUpDown/ChevronUp/ChevronDown); props: isActive, direction; imported from lib/orders types

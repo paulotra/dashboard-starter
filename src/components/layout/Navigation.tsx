@@ -21,7 +21,7 @@ export default function Navigation({ onMenuClick }: NavigationProps) {
   const Icon = current.icon
 
   return (
-    <header className="border-border-color border-l bg-white px-5 py-5">
+    <header className="border-border-color shadow-navigation z-10 border-l bg-white px-5 py-5">
       <div className="flex items-center justify-between gap-3">
         {/* Left: menu toggle (mobile) + icon + title + breadcrumb */}
         <div className="flex items-center gap-3">

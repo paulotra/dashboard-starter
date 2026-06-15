@@ -116,7 +116,9 @@
   --color-btn-secondary-bg: var(--color-neutral-100);
 
   /* Shadows */
-  --shadow-card: 0 2px 8px var(--color-primary-200);
+  --shadow-sidebar: 2px 0 16px #e2f1fc50;
+  --shadow-navigation: 0 2px 16px #e2f1fc;
+  --shadow-card: 0 2px 16px #e2f1fc;
 }
 
 /* Base */

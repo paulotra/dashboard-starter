@@ -24,7 +24,7 @@ export default function Sidebar({
   const pathname = usePathname() ?? ''
 
   return (
-    <aside className="flex h-full w-72 flex-col bg-white">
+    <aside className="shadow-sidebar flex h-full w-72 flex-col bg-white">
       {/* Logo + Nav */}
       <div className="flex flex-1 flex-col gap-10 overflow-y-auto px-6 pt-6">
         <Logo companyName={companyName} />
