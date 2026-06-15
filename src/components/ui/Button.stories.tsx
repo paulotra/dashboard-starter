@@ -75,3 +75,17 @@ export const AllVariants: Story = {
     </div>
   ),
 }
+
+/** The two buttons that appear in the Orders page Navigation header */
+export const NavActionPair: Story = {
+  render: () => (
+    <div className="flex items-center gap-2">
+      <Button variant="secondary" icon={Download}>
+        Export
+      </Button>
+      <Button variant="primary" icon={Plus}>
+        Create Order
+      </Button>
+    </div>
+  ),
+}

@@ -50,8 +50,15 @@ dashboard/ components:
 - `TopCustomers.tsx` — top customers list card; uses CardWrapper (p-0 override) + Avatar; props: `customers` (Customer[]), `title`, `onAllCustomersClick`, `allCustomersHref`, `className`; exports `Customer` interface and `DEFAULT_CUSTOMERS`; pluralizes machine/order counts
 
 layout/ components:
-- `DashboardShell.tsx` — layout wrapper (client component with sidebar toggle)
+- `DashboardShell.tsx` — layout wrapper (client component with sidebar toggle); wraps content in `<PageActionsProvider>`
 - `Sidebar.tsx`, `Navigation.tsx`, `Breadcrumb.tsx`
+- `PageActionsContext.tsx` — page actions context slot system; exports `PageActionsProvider`, `NavActions`, `NavActionsSlot`, `useNavActions`, `usePageActions`
+
+Page actions pattern:
+- Pages use `<NavActions>{memoizedButtons}</NavActions>` (renders null, registers into context)
+- `useNavActions(node, deps)` available for imperative/controlled registration
+- `<NavActionsSlot/>` lives in Navigation's right side; clears automatically on page unmount
+- Provider wraps both Navigation and page children inside DashboardShell
 
 Icon pattern: use lucide-react directly (NOT a custom Icon abstraction). `src/components/icons/` directory was deleted — all icons now come from lucide-react. Icons used in RecentOrdersTable: `EllipsisVertical` (action menu), `ChevronsUpDown` (unsorted), `ChevronUp` (asc), `ChevronDown` (desc). Size via `size={14}` prop + `aria-hidden="true"`.
 

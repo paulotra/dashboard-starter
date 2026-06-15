@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation'
 import { Menu } from 'lucide-react'
 import { ALL_NAV_ITEMS } from '@/lib/nav'
 import Breadcrumb from './Breadcrumb'
+import { NavActionsSlot } from './PageActionsContext'
 
 interface NavigationProps {
   onMenuClick?: () => void
@@ -21,22 +22,28 @@ export default function Navigation({ onMenuClick }: NavigationProps) {
 
   return (
     <header className="border-border-color border-l bg-white px-5 py-5">
-      <div className="flex items-center gap-3">
-        <button
-          type="button"
-          className="flex size-10 shrink-0 items-center justify-center rounded-lg text-black md:hidden"
-          onClick={onMenuClick}
-          aria-label="Open menu"
-        >
-          <Menu size={20} />
-        </button>
-        <div className="bg-primary-100 hidden size-10 shrink-0 items-center justify-center rounded-lg md:flex">
-          <Icon size={16} className="text-primary-500" />
+      <div className="flex items-center justify-between gap-3">
+        {/* Left: menu toggle (mobile) + icon + title + breadcrumb */}
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            className="flex size-10 shrink-0 items-center justify-center rounded-lg text-black md:hidden"
+            onClick={onMenuClick}
+            aria-label="Open menu"
+          >
+            <Menu size={20} />
+          </button>
+          <div className="bg-primary-100 hidden size-10 shrink-0 items-center justify-center rounded-lg md:flex">
+            <Icon size={16} className="text-primary-500" />
+          </div>
+          <div className="flex flex-col">
+            <h1>{current.label}</h1>
+            <Breadcrumb items={[{ label: current.section }, { label: current.label }]} />
+          </div>
         </div>
-        <div className="flex flex-col">
-          <h1>{current.label}</h1>
-          <Breadcrumb items={[{ label: current.section }, { label: current.label }]} />
-        </div>
+
+        {/* Right: page-level action buttons injected by each page */}
+        <NavActionsSlot />
       </div>
     </header>
   )
