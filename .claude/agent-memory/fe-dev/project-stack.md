@@ -30,5 +30,19 @@ Storybook: v10.4.4, framework `@storybook/nextjs-vite` (Next.js + Vite, not Webp
 
 Existing token additions beyond Tailwind defaults:
 - `--color-brand-blue: #3564fc` — added for Logo component; use `bg-brand-blue`
+- `--text-2xs: 0.625rem` — 10px font size; use `text-2xs`
+- `--color-body-color: #f4f8fb` — page background; use `bg-body-color`
+- `--color-border-color: #dae9f4` — table/card borders; use `border-border-color`
+- Full primary/neutral/secondary/red/green/yellow scales already in globals.css
+
+Components in src/components/:
+- `BadgeStatus.tsx` — status badge (Pending/Completed/Processing/Cancelled variants), reuse for order status
+- `Button.tsx` — action button with variant prop
+- `StatsCard.tsx` — KPI metric card
+- `RecentOrdersTable.tsx` — client component ('use client') with useState sort state + useMemo sorted rows; exports `Order` interface and `DEFAULT_ORDERS`; sort cycles asc→desc on same column, resets to asc on new column
+- `DashboardShell.tsx` — layout wrapper (client component with sidebar toggle)
+- `Sidebar.tsx`, `Navigation.tsx`, `Logo.tsx`, `Breadcrumb.tsx`, `Switch.tsx`
+
+Icon pattern: use lucide-react directly (NOT a custom Icon abstraction). `src/components/icons/` directory was deleted — all icons now come from lucide-react. Icons used in RecentOrdersTable: `EllipsisVertical` (action menu), `ChevronsUpDown` (unsorted), `ChevronUp` (asc), `ChevronDown` (desc). Size via `size={14}` prop + `aria-hidden="true"`.
 
 Static asset pattern: SVGs in `public/` are referenced as string paths `/filename.svg` in `next/image`. No module import for public-dir assets. The `next/image` component is used with `width`/`height` props for static SVGs from `public/`.
