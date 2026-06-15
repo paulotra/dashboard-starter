@@ -41,8 +41,9 @@ ui/ primitives:
 - `CardWrapper.tsx` — card chrome (`rounded-xl bg-white p-4`); spreads `ComponentPropsWithoutRef<'div'>`, merges className via cn. Default export + `CardWrapperProps`.
 - `Avatar.tsx` — circular initials avatar; `size-10 rounded-full bg-primary-100 text-primary-500 text-xs font-medium`; props: `initials` (string), `className`, spreads div props; `aria-hidden="true"`. Default export + `AvatarProps`.
 - `BadgeStatus.tsx` — refactored to generic `variant` ('success'|'danger'|'warning'|'info'|'neutral') + `children` string API. Legacy `status` prop (OrderStatus union) still works via internal map for backward compat. Exports `BadgeVariant` and `OrderStatus` types.
-- `Button.tsx` — action button with variant prop
+- `Button.tsx` — action button with variant prop (secondary, primary, primary-filled, danger, danger-filled)
 - `Logo.tsx`, `Switch.tsx`
+- `drawer/` — compound drawer: DrawerWrapper, DrawerHeader, DrawerBody, DrawerFooter. Barrel at `drawer/index.ts`. Full a11y: Esc, backdrop, focus trap, return focus, scroll-lock, role=dialog.
 
 Page-level feature tables are colocated under `_components/` in each route dir:
 - `app/(dashboard)/orders/_components/OrdersTable.tsx` — full-featured orders table (search, status filter chips, sort, pagination)
@@ -75,6 +76,13 @@ Page actions pattern:
 - `useNavActions(node, deps)` available for imperative/controlled registration
 - `<NavActionsSlot/>` lives in Navigation's right side; clears automatically on page unmount
 - Provider wraps both Navigation and page children inside DashboardShell
+
+form/ primitives:
+- `form/TableSearch.tsx`
+- `form/FormField.tsx` — labeled control wrapper; `label`, `required?`, `htmlFor?`, `helperText?`, `error?`.
+- `form/Input.tsx` — `Omit<ComponentPropsWithoutRef<'input'>, 'prefix'>` + `prefix?: ReactNode`; h-11 rounded-lg. NOTE: must Omit native `prefix` (string) to redeclare as ReactNode.
+- `form/Select.tsx` — native `<select>` styled; `options?: {label,value}[]`, `placeholder?`, ChevronDown icon.
+- `form/ImageDropzone.tsx` — `<label>` wrapping sr-only file input; `onFileSelect?`, `label?`, `hint?`.
 
 Icon pattern: use lucide-react directly (NOT a custom Icon abstraction). `src/components/icons/` directory was deleted — all icons now come from lucide-react. Icons used in RecentOrdersTable: `EllipsisVertical` (action menu), `ChevronsUpDown` (unsorted), `ChevronUp` (asc), `ChevronDown` (desc). Size via `size={14}` prop + `aria-hidden="true"`.
 
