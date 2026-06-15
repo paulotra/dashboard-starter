@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import Navigation from "./Navigation";
+import { PageActionsProvider } from "./PageActionsContext";
 
 const meta: Meta<typeof Navigation> = {
   title: "Layout/Navigation",
@@ -9,6 +10,13 @@ const meta: Meta<typeof Navigation> = {
     layout: "fullscreen",
     nextjs: { appDirectory: true, navigation: { pathname: "/dashboard" } },
   },
+  decorators: [
+    (Story) => (
+      <PageActionsProvider>
+        <Story />
+      </PageActionsProvider>
+    ),
+  ],
 };
 
 export default meta;

@@ -26,12 +26,25 @@ import {
   useState,
   type ReactNode,
 } from 'react'
+import type { BreadcrumbItem } from './Breadcrumb'
 
 // ─── Context ──────────────────────────────────────────────────────────────────
+
+/**
+ * Optional override for the Navigation title + breadcrumb. Pages with dynamic
+ * headers (e.g. a customer detail page) register one; otherwise Navigation
+ * derives the header from the static nav config.
+ */
+export interface PageHeader {
+  title: string
+  breadcrumb: BreadcrumbItem[]
+}
 
 interface PageActionsContextValue {
   actions: ReactNode
   setActions: (node: ReactNode) => void
+  header: PageHeader | null
+  setHeader: (header: PageHeader | null) => void
 }
 
 const PageActionsContext = createContext<PageActionsContextValue | null>(null)
@@ -48,10 +61,11 @@ export function usePageActions(): PageActionsContextValue {
 
 export function PageActionsProvider({ children }: { children: ReactNode }) {
   const [actions, setActions] = useState<ReactNode>(null)
+  const [header, setHeader] = useState<PageHeader | null>(null)
 
   const value = useMemo<PageActionsContextValue>(
-    () => ({ actions, setActions }),
-    [actions]
+    () => ({ actions, setActions, header, setHeader }),
+    [actions, header]
   )
 
   return (
@@ -79,6 +93,36 @@ export function NavActions({ children }: { children: ReactNode }) {
     setActions(children)
     return () => setActions(null)
   }, [children, setActions])
+
+  return null
+}
+
+// ─── NavHeader (component API) ────────────────────────────────────────────────
+
+/**
+ * Override the Navigation title + breadcrumb for the current page. Renders
+ * nothing; clears the override on unmount.
+ *
+ *   <NavHeader
+ *     title="Bakkerij Brood"
+ *     breadcrumb={[
+ *       { label: 'Manage' },
+ *       { label: 'Customers', href: '/customers' },
+ *       { label: 'Bakkerij Brood' },
+ *     ]}
+ *   />
+ */
+export function NavHeader({ title, breadcrumb }: PageHeader) {
+  const { setHeader } = usePageActions()
+  // Serialize so the effect re-registers only when the header content changes,
+  // not on every render (breadcrumb is typically a fresh array literal).
+  const key = JSON.stringify({ title, breadcrumb })
+
+  useEffect(() => {
+    setHeader({ title, breadcrumb })
+    return () => setHeader(null)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key, setHeader])
 
   return null
 }

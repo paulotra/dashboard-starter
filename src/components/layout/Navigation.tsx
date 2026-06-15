@@ -4,7 +4,8 @@ import { usePathname } from 'next/navigation'
 import { Menu } from 'lucide-react'
 import { ALL_NAV_ITEMS } from '@/lib/nav'
 import Breadcrumb from './Breadcrumb'
-import { NavActionsSlot } from './PageActionsContext'
+import type { BreadcrumbItem } from './Breadcrumb'
+import { NavActionsSlot, usePageActions } from './PageActionsContext'
 
 interface NavigationProps {
   onMenuClick?: () => void
@@ -12,6 +13,7 @@ interface NavigationProps {
 
 export default function Navigation({ onMenuClick }: NavigationProps) {
   const pathname = usePathname() ?? ''
+  const { header } = usePageActions()
   const current = ALL_NAV_ITEMS.find(
     (item) => pathname === item.href || pathname.startsWith(item.href + '/')
   )
@@ -19,6 +21,12 @@ export default function Navigation({ onMenuClick }: NavigationProps) {
   if (!current) return null
 
   const Icon = current.icon
+
+  // A page may override the title + breadcrumb (e.g. a customer detail page);
+  // otherwise fall back to the static nav config for the matched route.
+  const title = header?.title ?? current.label
+  const breadcrumbItems: BreadcrumbItem[] =
+    header?.breadcrumb ?? [{ label: current.section }, { label: current.label }]
 
   return (
     <header className="border-border-color shadow-navigation z-10 border-l bg-white px-5 py-5">
@@ -37,8 +45,8 @@ export default function Navigation({ onMenuClick }: NavigationProps) {
             <Icon size={16} className="text-primary-500" />
           </div>
           <div className="flex flex-col">
-            <h1>{current.label}</h1>
-            <Breadcrumb items={[{ label: current.section }, { label: current.label }]} />
+            <h1>{title}</h1>
+            <Breadcrumb items={breadcrumbItems} />
           </div>
         </div>
 

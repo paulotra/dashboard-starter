@@ -12,6 +12,10 @@ export interface Customer {
   status: CustomerStatus
   orders: number
   totalSpent: string
+  /** Contact phone number — shown on the customer detail page. */
+  contactNumber?: string
+  /** Free-form notes — shown on the customer detail page. */
+  notes?: string
 }
 
 export type CustomerSortKey = 'name' | 'location' | 'status' | 'orders' | 'totalSpent'
@@ -29,6 +33,10 @@ const STATUS_ORDER: Record<CustomerStatus, number> = {
   Deactivated: 1,
   'Invite Sent': 2,
   Expired: 3,
+}
+
+export function getCustomerById(id: string): Customer | undefined {
+  return SAMPLE_CUSTOMERS.find((c) => c.id === id)
 }
 
 export function compareCustomers(a: Customer, b: Customer, key: CustomerSortKey): number {
@@ -55,9 +63,12 @@ export const SAMPLE_CUSTOMERS: Customer[] = [
     name: 'Bakkerij Brood',
     initials: 'BB',
     location: 'Museumstraat 1, 1071 XX Amsterdam, Netherlands',
-    status: 'Expired',
-    orders: 12,
+    status: 'Activated',
+    orders: 135,
     totalSpent: '€49.50',
+    contactNumber: '325 - 3139 - 230',
+    notes:
+      'Preventief onderhoud uitgevoerd, Klant heeft gevraagd om follow-up afspraak. Accu vervangen na meting.',
   },
   {
     id: '2',

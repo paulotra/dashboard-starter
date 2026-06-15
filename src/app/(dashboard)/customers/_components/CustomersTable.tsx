@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
+import Link from 'next/link'
 import { EllipsisVertical } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { SAMPLE_CUSTOMERS, compareCustomers } from '@/lib/customers'
@@ -246,12 +247,15 @@ export default function CustomersTable({
                 >
                   {/* Customer cell — avatar + name */}
                   <td className="py-3 pr-3 pl-4">
-                    <div className="flex items-center gap-3">
+                    <Link
+                      href={`/customers/${customer.id}`}
+                      className="focus-visible:outline-primary-500 group inline-flex items-center gap-3 rounded-lg focus-visible:outline-2"
+                    >
                       <Avatar initials={customer.initials} />
-                      <span className="font-sans text-sm font-medium text-black">
+                      <span className="font-sans text-sm font-medium text-black group-hover:text-primary-500">
                         {customer.name}
                       </span>
-                    </div>
+                    </Link>
                   </td>
 
                   {/* Location cell */}
