@@ -1,5 +1,5 @@
-import StatsCard from '@/components/StatsCard'
-import RecentOrdersTable from '@/components/RecentOrdersTable'
+import StatsCard from '@/components/dashboard/StatsCard'
+import RecentOrdersTable from '@/components/dashboard/RecentOrdersTable'
 
 export default function DashboardPage() {
   return (

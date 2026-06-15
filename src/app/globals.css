@@ -3,7 +3,7 @@
 /* ─── Tailwind v4 theme wiring ───────────────────────────────── */
 @theme inline {
   /* Primary color scale */
-  --color-primary-100: #f4f8fb;
+  --color-primary-100: #f2f6f9;
   --color-primary-200: #dae9f4;
   --color-primary-300: #90b5ff;
   --color-primary-400: #5286ff;

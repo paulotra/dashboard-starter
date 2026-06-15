@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import Sidebar from "./Sidebar";
 
 const meta: Meta<typeof Sidebar> = {
-  title: "Components/Sidebar",
+  title: "Layout/Sidebar",
   component: Sidebar,
   tags: ["autodocs"],
   parameters: {

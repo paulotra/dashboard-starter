@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import Breadcrumb from "./Breadcrumb";
 
 const meta: Meta<typeof Breadcrumb> = {
-  title: "Components/Breadcrumb",
+  title: "Layout/Breadcrumb",
   component: Breadcrumb,
   tags: ["autodocs"],
 };

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import StatsCard from "./StatsCard";
 
 const meta: Meta<typeof StatsCard> = {
-  title: "Components/StatsCard",
+  title: "Dashboard/StatsCard",
   component: StatsCard,
   tags: ["autodocs"],
   args: {

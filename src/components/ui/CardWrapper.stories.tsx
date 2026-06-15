@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import CardWrapper from './CardWrapper'
 
 const meta: Meta<typeof CardWrapper> = {
-  title: 'Components/CardWrapper',
+  title: 'UI/CardWrapper',
   component: CardWrapper,
   tags: ['autodocs'],
   parameters: {

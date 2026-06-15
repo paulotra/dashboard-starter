@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import CardWrapper from "@/components/CardWrapper";
+import CardWrapper from "@/components/ui/CardWrapper";
 
 export interface StatsCardProps {
   title: string;

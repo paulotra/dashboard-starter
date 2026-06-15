@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { ChevronRight } from 'lucide-react'
 import { NAV_SECTIONS } from '@/lib/nav'
-import Logo from './Logo'
+import Logo from '../ui/Logo'
 
 export interface SidebarUser {
   name: string

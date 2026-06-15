@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import RecentOrdersTable, { DEFAULT_ORDERS } from './RecentOrdersTable'
 
 const meta: Meta<typeof RecentOrdersTable> = {
-  title: 'Components/RecentOrdersTable',
+  title: 'Dashboard/RecentOrdersTable',
   component: RecentOrdersTable,
   tags: ['autodocs'],
   parameters: {

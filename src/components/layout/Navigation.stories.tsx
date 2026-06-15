@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import Navigation from "./Navigation";
 
 const meta: Meta<typeof Navigation> = {
-  title: "Components/Navigation",
+  title: "Layout/Navigation",
   component: Navigation,
   tags: ["autodocs"],
   parameters: {

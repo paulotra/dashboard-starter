@@ -2,9 +2,9 @@
 
 import { useState, useMemo } from 'react'
 import { cn } from '@/lib/utils'
-import CardWrapper from '@/components/CardWrapper'
-import BadgeStatus from '@/components/BadgeStatus'
-import type { BadgeStatusProps } from '@/components/BadgeStatus'
+import CardWrapper from '@/components/ui/CardWrapper'
+import BadgeStatus from '@/components/ui/BadgeStatus'
+import type { BadgeStatusProps } from '@/components/ui/BadgeStatus'
 import { EllipsisVertical, ChevronsUpDown, ChevronUp, ChevronDown } from 'lucide-react'
 
 export interface Order {
