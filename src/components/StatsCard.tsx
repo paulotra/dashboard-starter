@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import CardWrapper from "@/components/CardWrapper";
 
 export interface StatsCardProps {
   title: string;
@@ -14,7 +15,7 @@ export default function StatsCard({
   subtitle,
 }: StatsCardProps) {
   return (
-    <div className="flex flex-col gap-2.5 rounded-xl bg-white p-4">
+    <CardWrapper className="flex flex-col gap-2.5">
       <p className="font-sans text-sm font-medium text-black">{title}</p>
       <div className="flex flex-col gap-1">
         <p className="font-sans text-3xl font-semibold text-black">{value}</p>
@@ -29,6 +30,6 @@ export default function StatsCard({
           </p>
         )}
       </div>
-    </div>
+    </CardWrapper>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react'
 import { cn } from '@/lib/utils'
+import CardWrapper from '@/components/CardWrapper'
 import BadgeStatus from '@/components/BadgeStatus'
 import type { BadgeStatusProps } from '@/components/BadgeStatus'
 import { EllipsisVertical, ChevronsUpDown, ChevronUp, ChevronDown } from 'lucide-react'
@@ -220,7 +221,7 @@ export default function RecentOrdersTable({
   }, [orders, sortKey, sortDir])
 
   return (
-    <div className={cn('flex flex-col gap-4 rounded-xl bg-white px-4 pt-4 pb-3', className)}>
+    <CardWrapper className={cn('flex flex-col gap-4 px-4 pt-4 pb-3', className)}>
       {/* Toolbar */}
       <div className="flex flex-col gap-0.5">
         <h2 className="font-sans text-base font-medium text-black">{title}</h2>
@@ -330,7 +331,7 @@ export default function RecentOrdersTable({
           </tbody>
         </table>
       </div>
-    </div>
+    </CardWrapper>
   )
 }
 

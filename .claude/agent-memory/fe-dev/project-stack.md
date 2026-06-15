@@ -36,10 +36,11 @@ Existing token additions beyond Tailwind defaults:
 - Full primary/neutral/secondary/red/green/yellow scales already in globals.css
 
 Components in src/components/:
+- `Card.tsx` — shared card wrapper (`rounded-xl bg-white p-4` default); props: `children`, `className` (merged via `cn`, callers override padding etc.), spreads `ComponentPropsWithoutRef<'div'>`. Default export + `CardProps` named export.
 - `BadgeStatus.tsx` — status badge (Pending/Completed/Processing/Cancelled variants), reuse for order status
 - `Button.tsx` — action button with variant prop
-- `StatsCard.tsx` — KPI metric card
-- `RecentOrdersTable.tsx` — client component ('use client') with useState sort state + useMemo sorted rows; exports `Order` interface and `DEFAULT_ORDERS`; sort cycles asc→desc on same column, resets to asc on new column
+- `StatsCard.tsx` — KPI metric card; uses `<Card className="flex flex-col gap-2.5">` (default p-4)
+- `RecentOrdersTable.tsx` — client component ('use client') with useState sort state + useMemo sorted rows; uses `<Card className="flex flex-col gap-4 px-4 pt-4 pb-3">` (overrides default padding via tailwind-merge); exports `Order` interface and `DEFAULT_ORDERS`; sort cycles asc→desc on same column, resets to asc on new column
 - `DashboardShell.tsx` — layout wrapper (client component with sidebar toggle)
 - `Sidebar.tsx`, `Navigation.tsx`, `Logo.tsx`, `Breadcrumb.tsx`, `Switch.tsx`
 
