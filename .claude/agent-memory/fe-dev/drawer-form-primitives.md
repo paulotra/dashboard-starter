@@ -37,6 +37,31 @@ Icons use lucide-react directly (not a custom Icon abstraction).
 
 Page-level composition, no story. `open`, `onClose`, `onSubmit?(data: AddProductFormData)?`. Wraps Body+Footer in `<form onSubmit>` so Enter submits. Categories derived from `SAMPLE_PRODUCTS` (Coffee, Soup, Tea). Uses Switch (controlled, `checked` + `onChange`), Button `variant="primary-filled"` for Create Product.
 
+## ProductPreviewDrawer (`src/app/(dashboard)/products/_components/ProductPreviewDrawer.tsx`)
+
+Read-only product detail drawer. Props: `product: Product | null`, `open`, `onClose`, `onEdit?`, `onDelete?`. No footer. Composed from DrawerWrapper + DrawerHeader + DrawerBody only.
+
+Header title pattern: passes a `<span>` (flex-col) as DrawerHeader's `title` ReactNode — outer span contains an aria-hidden eyebrow (`text-xs text-primary-500 "Product #N"`) and a visible name span (`text-base font-medium text-black`). The eyebrow is `aria-hidden="true"`, so `aria-labelledby` resolves cleanly to the product name only.
+
+DrawerHeader was NOT changed — `title: ReactNode` already accepts compound nodes. AddProductDrawer is unaffected.
+
+Body sections: Details header + Edit button (ghost `<button>` inline, `SquarePen` icon, primary-500), neutral-200 info card (label/value rows for Name/Stock/Price/Category/Status), divider, Delete section (`TriangleAlert` icon, danger Button full-width with `w-full justify-center`).
+
+Status badge: `variant="success"` "Active" when `product.active`, `variant="neutral"` "Inactive" otherwise.
+
+## Button `danger` variant
+
+`danger` variant already existed: `bg-red-100 text-red-500`. Added hover: `hover:bg-red-200`. `danger-filled` also got `hover:bg-red-600`. Button.stories.tsx: added `DeleteProduct` story (danger + Trash2 + `w-full justify-center`).
+
+## ProductsTable row-click pattern
+
+Added optional `onProductSelect?(product: Product)` prop. When provided:
+- `<tr>` gets `onClick={() => onProductSelect(product)}` + `cursor-pointer hover:bg-primary-100`
+- Product name renders as `<button>` (keyboard-focusable, Enter/Space activates, stopPropagation so no double-fire)
+- Toggle cell (`<td>`) and Action cell (`<td>`) both call `e.stopPropagation()` so they don't trigger row select
+
+When `onProductSelect` is not provided, renders exactly as before (no `<button>` wrapper on name, no cursor/hover).
+
 ## Products page wiring
 
-`src/app/(dashboard)/products/page.tsx` — added `const [addOpen, setAddOpen] = useState(false)`. Add Product NavAction onClick → `() => setAddOpen(true)`. `<AddProductDrawer open={addOpen} onClose={() => setAddOpen(false)} />` rendered alongside ProductsTable. useMemo deps stay `[]` (setAddOpen is a stable React setter).
+`src/app/(dashboard)/products/page.tsx` — `const [addOpen, setAddOpen] = useState(false)` + `const [selected, setSelected] = useState<Product | null>(null)`. `onProductSelect={setSelected}` on ProductsTable. `<ProductPreviewDrawer product={selected} open={selected !== null} onClose={() => setSelected(null)} />` coexists with AddProductDrawer. useMemo deps stay `[]`.

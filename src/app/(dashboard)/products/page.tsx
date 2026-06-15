@@ -2,13 +2,16 @@
 
 import { useState, useMemo } from 'react'
 import { Download, Plus } from 'lucide-react'
+import type { Product } from '@/lib/products'
 import Button from '@/components/ui/Button'
 import { NavActions } from '@/components/layout/PageActionsContext'
 import ProductsTable from './_components/ProductsTable'
 import AddProductDrawer from './_components/AddProductDrawer'
+import ProductPreviewDrawer from './_components/ProductPreviewDrawer'
 
 export default function ProductsPage() {
   const [addOpen, setAddOpen] = useState(false)
+  const [selected, setSelected] = useState<Product | null>(null)
 
   // Memoize so NavActions receives a stable reference between re-renders.
   // setAddOpen is stable (React guarantees setState setters never change),
@@ -32,12 +35,18 @@ export default function ProductsPage() {
       <NavActions>{actions}</NavActions>
 
       <div className="flex flex-col gap-3">
-        <ProductsTable />
+        <ProductsTable onProductSelect={setSelected} />
       </div>
 
       <AddProductDrawer
         open={addOpen}
         onClose={() => setAddOpen(false)}
+      />
+
+      <ProductPreviewDrawer
+        product={selected}
+        open={selected !== null}
+        onClose={() => setSelected(null)}
       />
     </>
   )

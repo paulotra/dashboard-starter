@@ -15,11 +15,11 @@ const VARIANT_CONFIG = {
     text: 'text-white',
   },
   danger: {
-    container: 'bg-red-100',
+    container: 'bg-red-100 hover:bg-red-200',
     text: 'text-red-500',
   },
   'danger-filled': {
-    container: 'bg-red-500',
+    container: 'bg-red-500 hover:bg-red-600',
     text: 'text-white',
   },
 } as const

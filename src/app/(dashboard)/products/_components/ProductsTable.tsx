@@ -38,6 +38,8 @@ export interface ProductsTableProps {
   title?: string
   pageSize?: number
   className?: string
+  /** Called with the clicked product when a row is selected. */
+  onProductSelect?: (product: Product) => void
 }
 
 /* ─── Component ──────────────────────────────────────────────────────── */
@@ -47,6 +49,7 @@ export default function ProductsTable({
   title = 'Products',
   pageSize = 7,
   className,
+  onProductSelect,
 }: ProductsTableProps) {
   /* ── Derive unique categories from data (no hardcoding) ── */
   const allCategories = useMemo(
@@ -266,13 +269,26 @@ export default function ProductsTable({
             ) : (
               pagedProducts.map((product) => {
                 const isActive = activeStates[product.id] ?? product.active
+                const isSelectable = Boolean(onProductSelect)
+
                 return (
                   <tr
                     key={product.id}
-                    className="border-border-color h-20 border-b last:border-b-0"
+                    onClick={
+                      isSelectable
+                        ? () => onProductSelect!(product)
+                        : undefined
+                    }
+                    className={cn(
+                      'border-border-color h-20 border-b last:border-b-0',
+                      isSelectable && 'cursor-pointer hover:bg-primary-100'
+                    )}
                   >
-                    {/* Toggle cell */}
-                    <td className="py-3 pl-3 text-center">
+                    {/* Toggle cell — stop propagation so row click isn't triggered */}
+                    <td
+                      className="py-3 pl-3 text-center"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <Switch
                         checked={isActive}
                         onChange={(checked) => handleToggle(product.id, checked)}
@@ -280,7 +296,10 @@ export default function ProductsTable({
                       />
                     </td>
 
-                    {/* Product cell: thumbnail + name */}
+                    {/* Product cell: thumbnail + name
+                        The name is a <button> so keyboard users can reach and
+                        activate the row preview without the row needing
+                        role="button" (which conflicts with implicit role="row"). */}
                     <td className="py-3 pr-3 pl-3">
                       <div className="flex items-center gap-3">
                         <Image
@@ -290,9 +309,22 @@ export default function ProductsTable({
                           height={80}
                           className="bg-primary-100 size-20 shrink-0 rounded-xl object-cover"
                         />
-                        <span className="font-sans text-sm font-medium text-black">
-                          {product.name}
-                        </span>
+                        {isSelectable ? (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              onProductSelect!(product)
+                            }}
+                            className="font-sans text-sm font-medium text-black focus-visible:outline-2 focus-visible:outline-primary-500"
+                          >
+                            {product.name}
+                          </button>
+                        ) : (
+                          <span className="font-sans text-sm font-medium text-black">
+                            {product.name}
+                          </span>
+                        )}
                       </div>
                     </td>
 
@@ -324,8 +356,11 @@ export default function ProductsTable({
                       </span>
                     </td>
 
-                    {/* Action cell */}
-                    <td className="py-3 pr-4 pl-3">
+                    {/* Action cell — stop propagation so ⋮ button doesn't trigger row select */}
+                    <td
+                      className="py-3 pr-4 pl-3"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <button
                         type="button"
                         aria-label={`More actions for ${product.name}`}

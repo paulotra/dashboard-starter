@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { Download, Trash, Plus } from 'lucide-react'
+import { Download, Trash, Trash2, Plus } from 'lucide-react'
 import Button from './Button'
 
 const meta: Meta<typeof Button> = {
@@ -51,6 +51,16 @@ export const DangerFilled: Story = {
     variant: 'danger-filled',
     icon: Trash,
     children: 'Cancel Order',
+  },
+}
+
+/** Full-width danger button as used in the Product preview drawer's delete section. */
+export const DeleteProduct: Story = {
+  args: {
+    variant: 'danger',
+    icon: Trash2,
+    children: 'Delete Product',
+    className: 'w-full justify-center',
   },
 }
 
