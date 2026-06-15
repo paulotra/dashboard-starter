@@ -2,177 +2,24 @@
 
 import { useState, useMemo } from 'react'
 import { cn } from '@/lib/utils'
+import { DEFAULT_ORDERS, compareOrders } from '@/lib/orders'
+import type { Order, SortKey, SortDirection } from '@/lib/orders'
 import CardWrapper from '@/components/ui/CardWrapper'
 import BadgeStatus from '@/components/ui/BadgeStatus'
-import type { BadgeStatusProps } from '@/components/ui/BadgeStatus'
 import Avatar from '@/components/ui/Avatar'
-import { EllipsisVertical, ChevronsUpDown, ChevronUp, ChevronDown } from 'lucide-react'
+import SortIndicator from '@/components/ui/SortIndicator'
+import { EllipsisVertical } from 'lucide-react'
 
-export interface Order {
-  id: string
-  orderNumber: string
-  name: string
-  initials: string
-  status: NonNullable<BadgeStatusProps['status']>
-  quantity: string
-  date: string
-  amount: string
-}
-
-export const DEFAULT_ORDERS: Order[] = [
-  {
-    id: '1',
-    orderNumber: '#1042',
-    name: 'Bakkerij Brood',
-    initials: 'BB',
-    status: 'Pending',
-    quantity: '3 items',
-    date: '03 jun 13:46',
-    amount: '€49.50',
-  },
-  {
-    id: '2',
-    orderNumber: '#1043',
-    name: 'Molen Koffie',
-    initials: 'MK',
-    status: 'Completed',
-    quantity: '5 items',
-    date: '04 jun 09:12',
-    amount: '€82.30',
-  },
-  {
-    id: '3',
-    orderNumber: '#1044',
-    name: 'Groente Huis',
-    initials: 'GH',
-    status: 'Processing',
-    quantity: '2 items',
-    date: '04 jun 10:45',
-    amount: '€23.75',
-  },
-  {
-    id: '4',
-    orderNumber: '#1045',
-    name: 'Vis & Seafood',
-    initials: 'VS',
-    status: 'Pending',
-    quantity: '7 items',
-    date: '04 jun 11:30',
-    amount: '€134.90',
-  },
-  {
-    id: '5',
-    orderNumber: '#1046',
-    name: 'Patisserie Belle',
-    initials: 'PB',
-    status: 'Completed',
-    quantity: '4 items',
-    date: '04 jun 12:05',
-    amount: '€67.20',
-  },
-  {
-    id: '6',
-    orderNumber: '#1047',
-    name: 'Slagerij Frans',
-    initials: 'SF',
-    status: 'Cancelled',
-    quantity: '1 item',
-    date: '04 jun 13:00',
-    amount: '€15.50',
-  },
-  {
-    id: '7',
-    orderNumber: '#1048',
-    name: 'De Kaasboer',
-    initials: 'DK',
-    status: 'Processing',
-    quantity: '6 items',
-    date: '04 jun 14:22',
-    amount: '€98.40',
-  },
-  {
-    id: '8',
-    orderNumber: '#1049',
-    name: 'Bloem & More',
-    initials: 'BM',
-    status: 'Completed',
-    quantity: '3 items',
-    date: '04 jun 15:37',
-    amount: '€44.60',
-  },
-]
-
-/* ─── Sort helpers ─────────────────────────────────────────────────── */
-
-type SortKey = 'name' | 'status' | 'quantity' | 'date' | 'amount'
-type SortDirection = 'asc' | 'desc'
-
-function parseQuantity(value: string): number {
-  const match = value.match(/^(\d+)/)
-  return match ? parseInt(match[1], 10) : 0
-}
-
-function parseAmount(value: string): number {
-  // Strip currency symbol and parse as float, e.g. "€49.50" → 49.5
-  return parseFloat(value.replace(/[^0-9.]/g, '')) || 0
-}
-
-const MONTH_MAP: Record<string, number> = {
-  jan: 0,
-  feb: 1,
-  mar: 2,
-  apr: 3,
-  may: 4,
-  jun: 5,
-  jul: 6,
-  aug: 7,
-  sep: 8,
-  oct: 9,
-  nov: 10,
-  dec: 11,
-}
-
-function parseDate(value: string): number {
-  // Format: "04 jun 13:46"
-  const parts = value.trim().split(' ')
-  if (parts.length !== 3) return 0
-  const [dayStr, monthStr, timeStr] = parts
-  const day = parseInt(dayStr, 10)
-  const month = MONTH_MAP[monthStr.toLowerCase()] ?? 0
-  const [hours, minutes] = timeStr.split(':').map(Number)
-  const now = new Date()
-  return new Date(now.getFullYear(), month, day, hours, minutes).getTime()
-}
-
-const STATUS_ORDER: Record<string, number> = {
-  Processing: 0,
-  Pending: 1,
-  Completed: 2,
-  Cancelled: 3,
-}
-
-function compareOrders(a: Order, b: Order, key: SortKey): number {
-  switch (key) {
-    case 'name':
-      return a.name.localeCompare(b.name)
-    case 'status': {
-      const aRank = STATUS_ORDER[a.status] ?? 99
-      const bRank = STATUS_ORDER[b.status] ?? 99
-      return aRank - bRank
-    }
-    case 'quantity':
-      return parseQuantity(a.quantity) - parseQuantity(b.quantity)
-    case 'date':
-      return parseDate(a.date) - parseDate(b.date)
-    case 'amount':
-      return parseAmount(a.amount) - parseAmount(b.amount)
-  }
-}
+// Re-export so existing consumers keep working
+export type { Order }
+export { DEFAULT_ORDERS }
 
 /* ─── Column config ─────────────────────────────────────────────────── */
 
+type RecentSortKey = Extract<SortKey, 'name' | 'status' | 'quantity' | 'date' | 'amount'>
+
 interface Column {
-  key: SortKey
+  key: RecentSortKey
   label: string
   align?: 'left' | 'center' | 'right'
 }
@@ -202,10 +49,10 @@ export default function RecentOrdersTable({
 }: RecentOrdersTableProps) {
   const resolvedSubtitle = subtitle ?? `You have ${orders.length} recent orders`
 
-  const [sortKey, setSortKey] = useState<SortKey>('date')
+  const [sortKey, setSortKey] = useState<RecentSortKey>('date')
   const [sortDir, setSortDir] = useState<SortDirection>('asc')
 
-  function handleSort(key: SortKey) {
+  function handleSort(key: RecentSortKey) {
     if (key === sortKey) {
       setSortDir((prev) => (prev === 'asc' ? 'desc' : 'asc'))
     } else {
@@ -335,39 +182,3 @@ export default function RecentOrdersTable({
     </CardWrapper>
   )
 }
-
-/* ─── SortIndicator ─────────────────────────────────────────────────── */
-
-interface SortIndicatorProps {
-  isActive: boolean
-  direction: SortDirection
-}
-
-function SortIndicator({ isActive, direction }: SortIndicatorProps) {
-  if (!isActive) {
-    return (
-      <ChevronsUpDown
-        aria-hidden="true"
-        size={14}
-        className="absolute right-0 shrink-0 text-neutral-600"
-      />
-    )
-  }
-  if (direction === 'asc') {
-    return (
-      <ChevronUp
-        aria-hidden="true"
-        size={14}
-        className="absolute right-0 shrink-0 text-neutral-600"
-      />
-    )
-  }
-  return (
-    <ChevronDown
-      aria-hidden="true"
-      size={14}
-      className="absolute right-0 shrink-0 text-neutral-600"
-    />
-  )
-}
-

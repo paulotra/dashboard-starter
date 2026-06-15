@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 import { Download, Plus } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import { NavActions } from '@/components/layout/PageActionsContext'
-import CardWrapper from '@/components/ui/CardWrapper'
+import OrdersTable from './_components/OrdersTable'
 
 export default function OrdersPage() {
   // Memoize so NavActions receives a stable reference between re-renders
@@ -27,11 +27,7 @@ export default function OrdersPage() {
       <NavActions>{actions}</NavActions>
 
       <div className="flex flex-col gap-3">
-        <CardWrapper>
-          <p className="text-sm text-neutral-600">
-            Orders will appear here. Connect your data source to populate this list.
-          </p>
-        </CardWrapper>
+        <OrdersTable />
       </div>
     </>
   )

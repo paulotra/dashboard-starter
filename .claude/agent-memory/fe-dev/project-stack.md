@@ -46,8 +46,16 @@ ui/ primitives:
 
 dashboard/ components:
 - `StatsCard.tsx` — KPI metric card; uses `<CardWrapper className="flex flex-col gap-2.5">`
-- `RecentOrdersTable.tsx` — client component ('use client') with useState sort + useMemo; imports Avatar from ui/Avatar (extracted); exports `Order` interface and `DEFAULT_ORDERS`
+- `RecentOrdersTable.tsx` — client component ('use client') with useState sort + useMemo; imports from lib/orders.ts + ui/SortIndicator; re-exports `Order` and `DEFAULT_ORDERS` for backward compat
+- `OrdersTable.tsx` — full-featured client table with search, status filter chips, sort, pagination; props: orders, title, pageSize (default 15), className; uses SAMPLE_ORDERS (30 rows) from lib/orders
 - `TopCustomers.tsx` — top customers list card; uses CardWrapper (p-0 override) + Avatar; props: `customers` (Customer[]), `title`, `onAllCustomersClick`, `allCustomersHref`, `className`; exports `Customer` interface and `DEFAULT_CUSTOMERS`; pluralizes machine/order counts
+
+lib/ shared modules:
+- `lib/orders.ts` — source of truth for Order interface, SortKey/SortDirection types, parse helpers, STATUS_ORDER, compareOrders, DEFAULT_ORDERS (8 rows), SAMPLE_ORDERS (30 rows)
+
+ui/ primitives:
+- `ui/SortIndicator.tsx` — presentational sort icon (ChevronsUpDown/ChevronUp/ChevronDown); props: isActive, direction; imported from lib/orders types
+- `ui/Pagination.tsx` — horizontal page nav; 32px square buttons, gap-1, rounded-lg; props: currentPage, totalPages, onPageChange, className; truncation with ellipsis (first, current±1, last pages shown); full a11y (aria-current, aria-label, disabled states)
 
 layout/ components:
 - `DashboardShell.tsx` — layout wrapper (client component with sidebar toggle); wraps content in `<PageActionsProvider>`
