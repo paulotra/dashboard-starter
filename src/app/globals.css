@@ -51,8 +51,17 @@
   --color-secondary-60: #9751fb99;
   --color-secondary-20: #9751fb33;
 
-  /* Accent */
-  --color-mint: #00c7be;
+  /* Mint (Accent) color scale */
+  --color-mint-100: #eefffc;
+  --color-mint-200: #8efff0;
+  --color-mint-300: #4dfbeb;
+  --color-mint-400: #19e8db;
+  --color-mint-500: #00c7be;
+  --color-mint-600: #00a4a0;
+  --color-mint-700: #028381;
+  --color-mint-800: #086767;
+  --color-mint-900: #0c5555;
+  --color-mint-1000: #003234;
 
   /* Red (Danger) color scale */
   --color-red-100: #fdd1d1;

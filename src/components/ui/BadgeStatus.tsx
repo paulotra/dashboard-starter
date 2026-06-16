@@ -28,6 +28,16 @@ const VARIANT_CONFIG = {
     dot: 'bg-neutral-500',
     text: 'text-neutral-500',
   },
+  secondary: {
+    bg: 'bg-secondary-100',
+    dot: 'bg-secondary-500',
+    text: 'text-secondary-500',
+  },
+  mint: {
+    bg: 'bg-mint-100',
+    dot: 'bg-mint-500',
+    text: 'text-mint-500',
+  },
 } as const
 
 export type BadgeVariant = keyof typeof VARIANT_CONFIG
@@ -35,9 +45,10 @@ export type BadgeVariant = keyof typeof VARIANT_CONFIG
 /* ─── Order-status → variant map (backward-compat) ───────────────────── */
 
 const ORDER_STATUS_VARIANT: Record<string, BadgeVariant> = {
-  Pending: 'warning',
-  Completed: 'success',
-  Processing: 'info',
+  'New Order': 'info',
+  Confirmed: 'secondary',
+  Shipped: 'mint',
+  Delivered: 'success',
   Cancelled: 'danger',
 }
 

@@ -33,7 +33,7 @@ const COLUMNS: Column[] = [
 ]
 
 // Filter order mirrors the toolbar in the design.
-const STATUS_FILTERS: OrderStatus[] = ['Pending', 'Processing', 'Cancelled', 'Completed']
+const STATUS_FILTERS: OrderStatus[] = ['New Order', 'Confirmed', 'Shipped', 'Delivered', 'Cancelled']
 
 /* ─── Props ──────────────────────────────────────────────────────────── */
 

@@ -15,7 +15,7 @@ export default function DashboardPage() {
         />
         <StatsCard title="Active customers" value={34} delta="6" subtitle="ordered this week" />
         <StatsCard
-          title="Pending"
+          title="New Orders"
           value={4}
           subtitle={<span className="text-secondary-500">Awaiting confirmation</span>}
         />

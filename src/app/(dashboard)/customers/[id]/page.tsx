@@ -17,7 +17,7 @@ export default async function CustomerDetailPage({
     notFound()
   }
 
-  const pendingOrders = SAMPLE_ORDERS.filter((o) => o.status === 'Pending').length
+  const pendingOrders = SAMPLE_ORDERS.filter((o) => o.status === 'New Order').length
 
   return (
     <>

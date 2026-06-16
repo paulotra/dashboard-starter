@@ -19,7 +19,13 @@ import Pagination from '@/components/ui/Pagination'
 
 type StatusFilter = NonNullable<BadgeStatusProps['status']>
 
-const ALL_STATUS_FILTERS: StatusFilter[] = ['Pending', 'Processing', 'Cancelled', 'Completed']
+const ALL_STATUS_FILTERS: StatusFilter[] = [
+  'New Order',
+  'Confirmed',
+  'Shipped',
+  'Delivered',
+  'Cancelled',
+]
 
 /* ─── Column config ──────────────────────────────────────────────────── */
 

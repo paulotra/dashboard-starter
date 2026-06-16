@@ -22,7 +22,7 @@ interface StatusStyle {
 const STATUS_STYLES: Record<OrderStatus, StatusStyle> = {
   'New Order': { text: 'text-primary-500', bg: 'bg-primary-500' },
   Confirmed: { text: 'text-secondary-500', bg: 'bg-secondary-500' },
-  Shipped: { text: 'text-mint', bg: 'bg-mint' },
+  Shipped: { text: 'text-mint-500', bg: 'bg-mint-500' },
   Delivered: { text: 'text-green-500', bg: 'bg-green-500' },
   Cancelled: { text: 'text-red-500', bg: 'bg-red-500' },
 }
@@ -131,7 +131,7 @@ export default function OrderProgress({
           />
         </div>
 
-        <p className="text-2xs font-sans font-normal text-neutral-600">
+        <p className="font-sans text-xs font-normal text-neutral-600">
           Click a step to change the status.
         </p>
       </div>

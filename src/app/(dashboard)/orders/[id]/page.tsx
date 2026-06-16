@@ -5,19 +5,18 @@ import { SAMPLE_CUSTOMERS } from '@/lib/customers'
 import { SAMPLE_ORDER_PRODUCTS } from '@/lib/products'
 import OrderDetailHeader from '../_components/OrderDetailHeader'
 import OrderCustomerDetails from '../_components/OrderCustomerDetails'
-import OrderDetailsCard from '../_components/OrderDetailsCard'
-import OrderCancellation from '../_components/OrderCancellation'
 import OrderedProductsTable from '../_components/OrderedProductsTable'
-import OrderProgressCard from '../_components/OrderProgressCard'
+import OrderStatusPanel from '../_components/OrderStatusPanel'
 import type { OrderStatus } from '@/components/ui/OrderProgress'
 
 const formatEuro = (n: number) => `€ ${n.toFixed(2)}`
 
 // Map the table's order status to the OrderProgress pipeline status.
 const STATUS_TO_PIPELINE: Record<string, OrderStatus> = {
-  Pending: 'New Order',
-  Processing: 'Confirmed',
-  Completed: 'Delivered',
+  'New Order': 'New Order',
+  Confirmed: 'Confirmed',
+  Shipped: 'Shipped',
+  Delivered: 'Delivered',
   Cancelled: 'Cancelled',
 }
 
@@ -68,15 +67,13 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
             address={customer?.location ?? '—'}
             customerHref={customer ? `/customers/${customer.id}` : undefined}
           />
-          <OrderDetailsCard
+          <OrderStatusPanel
+            initialStatus={STATUS_TO_PIPELINE[order.status] ?? 'New Order'}
             orderNumber={order.orderNumber}
-            status={order.status}
             orderDate={order.date}
             quantity={order.quantity}
             summary={summary}
           />
-          <OrderProgressCard initialStatus={STATUS_TO_PIPELINE[order.status] ?? 'New Order'} />
-          <OrderCancellation orderNumber={order.orderNumber} />
         </div>
       </div>
     </>
