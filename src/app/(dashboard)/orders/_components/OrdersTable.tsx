@@ -235,6 +235,7 @@ export default function OrdersTable({
                   {/* Customer cell — avatar + name only */}
                   <td className="py-3 pr-3 pl-4">
                     <div className="flex items-center gap-3">
+                      {/* <Link href={`/customers/`}></Link> */}
                       <Avatar initials={order.initials} />
                       <span className="font-sans text-sm font-normal text-black">{order.name}</span>
                     </div>

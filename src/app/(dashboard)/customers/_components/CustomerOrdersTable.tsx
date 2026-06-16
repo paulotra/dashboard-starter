@@ -11,6 +11,7 @@ import BadgeStatus from '@/components/ui/BadgeStatus'
 import FilterChip from '@/components/ui/FilterChip'
 import SortIndicator from '@/components/ui/SortIndicator'
 import Pagination from '@/components/ui/Pagination'
+import Link from 'next/link'
 
 /* ─── Column config ──────────────────────────────────────────────────── */
 
@@ -123,7 +124,11 @@ export default function CustomerOrdersTable({
         </div>
 
         {/* Right: filter chips */}
-        <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Filter by status">
+        <div
+          className="flex flex-wrap items-center gap-2"
+          role="group"
+          aria-label="Filter by status"
+        >
           {allStatusFilters.map((status) => (
             <FilterChip
               key={status}
@@ -202,9 +207,12 @@ export default function CustomerOrdersTable({
                 <tr key={order.id} className="border-border-color h-14 border-b last:border-b-0">
                   {/* Order # cell */}
                   <td className="py-3 pr-3 pl-4">
-                    <span className="text-primary-500 font-sans text-sm font-medium">
+                    <Link
+                      href={`/orders/${order.id}`}
+                      className="text-primary-500 font-sans text-sm font-medium"
+                    >
                       {order.orderNumber}
-                    </span>
+                    </Link>
                   </td>
 
                   {/* Status cell */}
