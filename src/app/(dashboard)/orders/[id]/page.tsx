@@ -12,11 +12,7 @@ import OrderedProductsTable from '../_components/OrderedProductsTable'
 
 const formatEuro = (n: number) => `€ ${n.toFixed(2)}`
 
-export default async function OrderDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>
-}) {
+export default async function OrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const order = getOrderById(id)
 
@@ -44,7 +40,7 @@ export default async function OrderDetailPage({
 
       <div className="flex flex-col gap-3 lg:flex-row lg:items-start">
         {/* ── Ordered products ── */}
-        <CardWrapper className="flex w-full min-w-0 flex-1 flex-col gap-4 px-4 pt-4 pb-3">
+        <div className="flex flex-1 flex-col px-2">
           <div className="flex flex-col gap-0.5">
             <h2 className="font-sans text-xl font-medium text-black">Ordered Products</h2>
             <p className="font-sans text-sm font-normal text-neutral-600">
@@ -52,7 +48,7 @@ export default async function OrderDetailPage({
             </p>
           </div>
           <OrderedProductsTable products={SAMPLE_ORDER_PRODUCTS} />
-        </CardWrapper>
+        </div>
 
         {/* ── Right column: detail cards ── */}
         <div className="flex w-full shrink-0 flex-col gap-3 lg:w-90">

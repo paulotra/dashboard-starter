@@ -1,9 +1,14 @@
 'use client'
 
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useRef, useSyncExternalStore, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import { X } from 'lucide-react'
 import { cn } from '@/lib/utils'
+
+// A store that never changes: server snapshot is `false`, client snapshot is
+// `true`. React hydrates with the server value first, then re-renders with the
+// client value — giving a mount flag with no hydration mismatch.
+const emptySubscribe = () => () => {}
 
 export interface ModalWrapperProps {
   open: boolean
@@ -49,8 +54,11 @@ export default function ModalWrapper({
   const previousFocusRef = useRef<HTMLElement | null>(null)
   // Only portal after mount so the first client render matches the server
   // (both render nothing), avoiding a hydration mismatch.
-  const [mounted, setMounted] = useState(false)
-  useEffect(() => setMounted(true), [])
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  )
 
   // --- Body scroll lock ---
   useEffect(() => {
