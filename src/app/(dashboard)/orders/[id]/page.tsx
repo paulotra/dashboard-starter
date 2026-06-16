@@ -35,7 +35,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
 
   return (
     <>
-      <OrderDetailHeader orderNumber={order.orderNumber} />
+      <OrderDetailHeader orderId={order.id} orderNumber={order.orderNumber} />
 
       <div className="flex flex-col gap-3 lg:flex-row lg:items-start">
         {/* ── Ordered products ── */}

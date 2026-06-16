@@ -4,6 +4,8 @@ import { useId } from 'react'
 import { cn } from '@/lib/utils'
 import CardWrapper from '@/components/ui/CardWrapper'
 import Button from '@/components/ui/Button'
+import BadgeStatus from '@/components/ui/BadgeStatus'
+import type { OrderStatus } from '@/components/ui/BadgeStatus'
 
 export interface OrderSummaryValues {
   subtotal: string
@@ -12,12 +14,23 @@ export interface OrderSummaryValues {
   grandTotal: string
 }
 
+export interface OrderDetailsValues {
+  orderNumber: string
+  status: OrderStatus
+  orderDate: string
+  quantity: number | string
+}
+
 export interface CreateOrderSummaryProps {
   summary: OrderSummaryValues
   note: string
   onNoteChange: (note: string) => void
   onCreate: () => void
-  /** Disables the Create Order button (e.g. until a customer is selected). */
+  /** When provided, renders an "Order Details" section above the summary. */
+  orderDetails?: OrderDetailsValues
+  /** Submit button label. Defaults to "Create Order". */
+  submitLabel?: string
+  /** Disables the submit button (e.g. until a customer / products are set). */
   disabled?: boolean
   className?: string
 }
@@ -58,6 +71,8 @@ export default function CreateOrderSummary({
   note,
   onNoteChange,
   onCreate,
+  orderDetails,
+  submitLabel = 'Create Order',
   disabled,
   className,
 }: CreateOrderSummaryProps) {
@@ -65,6 +80,25 @@ export default function CreateOrderSummary({
 
   return (
     <CardWrapper className={cn('flex flex-col gap-5 px-4 pt-4 pb-4', className)}>
+      {/* ── Order details (edit mode) ── */}
+      {orderDetails && (
+        <>
+          <div className="flex flex-col gap-4">
+            <span className="font-sans text-sm font-medium text-black">Order Details</span>
+            <div className="flex flex-col gap-2">
+              <Row label="Order #" value={orderDetails.orderNumber} />
+              <div className="flex items-center justify-between gap-4">
+                <span className="font-sans text-xs font-normal text-neutral-600">Status</span>
+                <BadgeStatus status={orderDetails.status} />
+              </div>
+              <Row label="Order Date" value={orderDetails.orderDate} />
+              <Row label="Quantity" value={String(orderDetails.quantity)} />
+            </div>
+          </div>
+          <hr className="border-border-color" />
+        </>
+      )}
+
       {/* ── Order summary ── */}
       <div className="flex flex-col gap-4">
         <span className="font-sans text-sm font-medium text-black">Order Summary</span>
@@ -101,7 +135,7 @@ export default function CreateOrderSummary({
         disabled={disabled}
         className="w-full justify-center disabled:cursor-not-allowed disabled:opacity-50"
       >
-        Create Order
+        {submitLabel}
       </Button>
     </CardWrapper>
   )
