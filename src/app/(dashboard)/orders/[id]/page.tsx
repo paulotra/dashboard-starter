@@ -8,8 +8,18 @@ import OrderCustomerDetails from '../_components/OrderCustomerDetails'
 import OrderDetailsCard from '../_components/OrderDetailsCard'
 import OrderCancellation from '../_components/OrderCancellation'
 import OrderedProductsTable from '../_components/OrderedProductsTable'
+import OrderProgressCard from '../_components/OrderProgressCard'
+import type { OrderStatus } from '@/components/ui/OrderProgress'
 
 const formatEuro = (n: number) => `€ ${n.toFixed(2)}`
+
+// Map the table's order status to the OrderProgress pipeline status.
+const STATUS_TO_PIPELINE: Record<string, OrderStatus> = {
+  Pending: 'New Order',
+  Processing: 'Confirmed',
+  Completed: 'Delivered',
+  Cancelled: 'Cancelled',
+}
 
 export default async function OrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -65,6 +75,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
             quantity={order.quantity}
             summary={summary}
           />
+          <OrderProgressCard initialStatus={STATUS_TO_PIPELINE[order.status] ?? 'New Order'} />
           <OrderCancellation orderNumber={order.orderNumber} />
         </div>
       </div>

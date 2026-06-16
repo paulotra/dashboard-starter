@@ -51,6 +51,9 @@
   --color-secondary-60: #9751fb99;
   --color-secondary-20: #9751fb33;
 
+  /* Accent */
+  --color-mint: #00c7be;
+
   /* Red (Danger) color scale */
   --color-red-100: #fdd1d1;
   --color-red-200: #fba3a3;
